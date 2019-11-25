@@ -1,4 +1,4 @@
-# Notendahópagreininga
+# Notendahópagreining
 
 ### Ferðastjóri
 Skráir og skipuleggur ferðir.
