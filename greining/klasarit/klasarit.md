@@ -1,5 +1,5 @@
 # Klasarit
-
+```
 Employee
     |
     --Pilot
@@ -17,18 +17,13 @@ Voyage
 Flight
     |
     1->Destination
+```
 
----
-
-| --------- |
-| Employee  |
-| Name      |
-| Ssn       |
-| Address   |
-| Landline  |
-| Mobile    |
-| Email     |
-| --------- |
+| Employee Name | License |
+| Ssn | 
+| Address |
+| Landline |
+| Mobile |
+| Email |
+| **Methods** |
 | notSure() |
-| --------- |
-
