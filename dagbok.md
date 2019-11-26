@@ -1,6 +1,9 @@
 # Dagbókarfærsla 26.11.2019
-## Markmið dagsins:
-1. Við stefnum á að klára Kröfulista til viðmóts í dag (Jakob)
-2. Notkunartilvik (Arnar)
-3. Klasarit (Elmar og Örn)
-
+## Upphaf dags
+Við erum búnir með Notendahópagreiningu
+## Markmið dagsins
++ Kröfulisti til viðmóts (Jakob)
++ Notkunartilvik (Arnar)
++ Klasarit (Elmar og Örn)
+## Lok dags
+Klasarit er lokið, virknikröfur komnar á kröfulistann og notkunartilvik eru langt komin.
