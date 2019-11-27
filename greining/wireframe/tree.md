@@ -1,3 +1,4 @@
+```
 Vinnuferðir
     |
     --- Búa til nýja
@@ -53,4 +54,4 @@ Flugvélar
         --- Leit
             |
             ->- Breyta
-
+```
