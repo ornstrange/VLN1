@@ -34,4 +34,4 @@ Destination: Country Airport FlightTime Distance ContactName ContactNumber
 ÞETTA ERU BARA GÖGN
 
 ## Um klasaritið
-Klasarituð er byggt á lykil atriðum í kerfinu Þ.a. Starfsmenn, flugferð og flug.  Þessir klasar eru brotnir niður í smærri klasa eins og Pilot og FlightAttendant sem auðveldar vinnulag og flæði í kerfinu. 
+Klasarituð er byggt á lykil atriðum í kerfinu Þ.a. Starfsmenn, flugferð og flug.  Þessir klasar eru brotnir niður í smærri klasa eins og Pilot og FlightAttendant sem auðveldar vinnulag og flæði í kerfinu.  Einnig eru hugsaðir UI klasar og IO klasar sem tala við megin part af kerfinu. Klasaritið er með þriggja laga hönnun þar sem UI biður API um gögn sem talar við viðeigandi klasa og þaðan niður á IO klasa sem skila gögnum eða uppfæra gögn.
