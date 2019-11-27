@@ -2,6 +2,10 @@
 Vinnuferðir
     |
     --- Búa til nýja
+    |   |
+    |   --- Eins og gömul
+    |   |
+    |   --- Alveg ný
     |
     --- Yfirlit
         |
