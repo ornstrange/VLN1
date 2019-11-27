@@ -32,3 +32,6 @@ Destination: Country Airport FlightTime Distance ContactName ContactNumber
 
 ## Methods
 ÞETTA ERU BARA GÖGN
+
+## Um klasaritið
+Klasarituð er byggt á lykil atriðum í kerfinu Þ.a. Starfsmenn, flugferð og flug.  Þessir klasar eru brotnir niður í smærri klasa eins og Pilot og FlightAttendant sem auðveldar vinnulag og flæði í kerfinu. 
