@@ -22,7 +22,7 @@ Klárað uppsetningu á notkunartilvikum, kröfulista og notendahópagreiningu, 
 
 # Dagbókarfærsla 28.11.2019
 ## Upphaf dags
-Klasarit og Notendahópagreining er komið, í dag þarf að vinna í stöðuriti og skýrslu. 
+Klasari, notendahópagreining og notkunartilvik eru komin, í dag þarf að vinna í stöðuriti og skýrslu. 
 ## Markmið dags
 + Klára stöðurit(Allir)
 + vinna í skýrslu(Allir)
