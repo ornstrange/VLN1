@@ -16,6 +16,8 @@ objects // Data
     --- employee.py
     |
     --- airplane.py
+    |
+    --- collections.py // all instances of classes
 
 file.py // Reading and writing to file
 

@@ -18,3 +18,4 @@ class FlightAttendant(Employee):
     def __init__(self, name, ssn, address, landline, mobile, email, rank):
         super.__init__(name, ssn, address, landline, mobile, email)
         self.rank = rank
+
