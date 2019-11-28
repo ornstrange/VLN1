@@ -11,9 +11,21 @@ Klasarit er lokið, virknikröfur komnar á kröfulistann og notkunartilvik eru 
 
 # Dagbókarfærsla 27.11.2019
 ## Upphaf dags
-Klasarit og Notendahópagreining kláruð, notkunartilvik langt komin.
+Klasarit og Notendahópagreining Þurfa endurbætingu, notkunartilvik langt komin.
 ## Markmið dagsins 
 + Klára notkunartilvikin(Arnar)
 + Klára nytsemis og notendaupplifunarkröfur(Jakob)
 + Laga klasarit(Valgeir, Elmar og Örn)
 + Byrja á stöðuriti(Allir)
+## Lok dags
+Klárað uppsetningu á notkunartilvikum, kröfulista og notendahópagreiningu, endanlega klárað klasarit, útlitshönnun og wireframe klárað.
+
+# Dagbókarfærsla 28.11.2019
+## Upphaf dags
+Klasarit og Notendahópagreining er komið, í dag þarf að vinna í stöðuriti og skýrslu. 
+## Markmið dags
++ Klára stöðurit(Allir)
++ vinna í skýrslu(Allir)
++ Yfirferða á öðrum atriðum(Allir)
+## Lok dags
+bla bla bla
