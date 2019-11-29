@@ -6,3 +6,17 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Temporary files
+*.tmp
+
+# Word temporary
+~$*.doc*
+
+# Word Auto Backup File
+Backup of *.doc*
+
+# Excel temporary
+~$*.xls*
+
+# Excel Backup File
+*.xlk
