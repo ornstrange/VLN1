@@ -29,3 +29,11 @@ Klasari, notendahópagreining og notkunartilvik eru komin, í dag þarf að vinn
 + Yfirferða á öðrum atriðum(Allir)
 ## Lok dags
 bla bla bla
+
+# Dabókarfærsla 29.11.2019
+## Upphaf dags
+Fara yfir öll atriðin sem þarf að koma fram í skýrslunni
+## Markmið dags
++ Leggja lokahönd á skýrsluna og skila henni í lok dags(Allir)
+## Lok dags 
+Skila skýrslunni 
