@@ -1,3 +1,6 @@
+# test purposes
+from airplane import Airplane
+
 class Collection:
     def __init__(self, data):
         self.all = data
@@ -8,21 +11,26 @@ class Collection:
         except KeyError:
             return self.all
 
-    def filterOne(self, key, value):
+    def filterKeyVal(self, key, val):
+        # filters a list using key, value
         try:
-            return filter(self.all, lambda x: vars(x)[key] == value)
+            return filter(arr, lambda x: vars(x)[key] == val)
         except (KeyError, ValueError):
-            return self.all
+            return None
 
-    def mainFilter(self, data):#data = tuple[(key,value),(key,value)]
-        dataToFilter = self.all
+    def filter(self, data):
+        # filters all elements using a list of
+        # (key, value) tuples
+        filtered = self.all
         try:
-            for i in range(len(data)):
-                dataToFilter = filter(dataToFilter, lambda x: vars(x)[data[i-1][0]] == data[i-1][1])
-            return dataToFilter
+            for key, val in data:
+                filtered = self.filterKeyVal(key, val)
+                if not filtered:
+                    # No match, dont bother continuing
+                    return None
+            return filtered
         except (KeyError, ValueError):
-            return self.all
-
+            return None
 
 
 class Employees:
