@@ -10,10 +10,9 @@ class Collection:
 
     def filterOne(self, key, value):
         try:
-            return filterOne(self.all, lambda x: vars(x)[key] == value)
-        except KeyError:
+            return filter(self.all, lambda x: vars(x)[key] == value)
+        except (KeyError, ValueError):
             return self.all
-
     def mainFilter(self, data):
         pass
 

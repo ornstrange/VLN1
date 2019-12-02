@@ -1,4 +1,4 @@
-from curses/main.py import Interface
+from curses/main import Interface
 
 
 def main():
