@@ -44,7 +44,7 @@ stdscr.keypad(True)
 
 windows = Windows(stdscr)
 
-windows.front("main")
+#windows.front("main")
 windows().addstr("i am main")
 windows().getch()
 
