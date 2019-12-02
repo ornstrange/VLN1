@@ -1,22 +1,12 @@
-from airplane import Airplane
-from destination import Destination
-from employee import Pilot, Employee
-from voyage import Voyage
+class Collection:
+    def __init__(self, data):
+        self.all = data
 
-
-class Airplanes:
-    def __init__(self, airplanes=None):
-        self.all = airplanes if airplanes else []
-
-
-class Voyages:
-    def __init__(self, voyages=None):
-        self.all = voyages if voyages else []
-
-
-class Destinations:
-    def __init__(self, destinations=None):
-        self.all = destinations if destinations else []
+    def sort(self, key):
+        try:
+            return sorted(self.all, key=lambda x: vars(x)[key])
+        except KeyError:
+            return self.all
 
 
 class Employees:
@@ -26,4 +16,10 @@ class Employees:
         self.all = self.pilots if self.pilots else []
         if flightAttendants:
             self.all += self.flightAttendants
+
+
+emps = Collection([Airplane(5,"a","b",10), Airplane(1,"c","d",20)])
+
+print(emps.all)
+print(emps.sort("id"))
 
