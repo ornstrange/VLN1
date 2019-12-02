@@ -1,9 +1,8 @@
 import curses as cur
 
-from windows.py import Window
-from menu.py import Menu
+from windows import Windows
+from menu import Menus
 
 class Interface:
-    def __init__(self):
-        pass
+    pass
 
