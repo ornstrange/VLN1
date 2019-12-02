@@ -8,6 +8,14 @@ class Collection:
         except KeyError:
             return self.all
 
+    def filterOne(self, key, value):
+        try:
+            return filterOne(self.all, lambda x: vars(x)[key] == value)
+        except KeyError:
+            return self.all
+
+    def mainFilter(self, data):
+        pass
 
 class Employees:
     def __init__(self, pilots=None, flightAttendants=None):
