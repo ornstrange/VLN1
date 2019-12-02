@@ -7,3 +7,32 @@ class File:
             for e in employees:
                 f.write(f"{e.name},{e.ssn},{e.address},{e.landline},{e.mobile},{e.email}\n")
 
+
+
+    def writeAirplanes(self, airplanes):
+        with open("data/airplaines.csv", "w+") as f:
+            #header row
+            f.write("id,type,maker,nrSeats\n")
+            #data rows
+            for i in airplanes:
+                f.write(f"{e.id},{e.type},{e.maker}, {e.nrSeats}\n")
+
+
+    def writeVoyages(self, voyages):
+        with open("data/voyages.csv", "w+") as f:
+            #header row
+            f.write("seatSold,outFlight,returnFlight,flightCaptain,flightAssistant,headAttendant,flightAttendants\n")
+            #data rows
+            for i in voyages:
+                f.write(f"{e.seatSold},{e.outFlight}, {e.returnFlight}, {e.flightCaptain}, {e.flightAssistant}, {e.headAttentant}, {e.flightAttendants}\n")
+
+
+    def writeDestinations(selfself, destinations):
+        with open("data/destinaiton.csv", "w+") as f:
+            #header row
+            f.write(f"country,airport,flightTime,distance,contactName,contactNr\n")
+            #data rows
+            for i in destinations:
+                f.write(f"{e.country},{e.airport},{e.flightTime},{e.distance}, {e.contactName}, {e.contactNr}\n")
+
+    pass
