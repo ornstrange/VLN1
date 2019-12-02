@@ -13,8 +13,17 @@ class Collection:
             return filter(self.all, lambda x: vars(x)[key] == value)
         except (KeyError, ValueError):
             return self.all
-    def mainFilter(self, data):
-        pass
+
+    def mainFilter(self, data):#data = tuple[(key,value),(key,value)]
+        dataToFilter = self.all
+        try:
+            for i in range(len(data)):
+                dataToFilter = filter(dataToFilter, lambda x: vars(x)[data[i-1][0]] == data[i-1][1])
+            return dataToFilter
+        except (KeyError, ValueError):
+            return self.all
+
+
 
 class Employees:
     def __init__(self, pilots=None, flightAttendants=None):
