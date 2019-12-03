@@ -29,6 +29,10 @@ class File:
     def writeDestinations(self, destinations):
         with open("data/destinations.csv", "w+") as f:
             self.write(f,destinations)
+
+    def writeFlight(self, flight):
+        with open("data/flight.csv","w+") as f:
+            self.write(f,destinations)
         
     def readAirplane(self):
         with open("data/airplanes.csv", "r") as f:
