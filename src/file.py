@@ -1,9 +1,10 @@
 import csv
-from objects/airplane import Airplane
-from objects/employee import Employee
-from objects/destination import Destination
-from objects/flight import Flight
-from objects/voyage import Voyage
+from objects.airplane import Airplane
+from objects.employee import Employee
+from objects.destination import Destination
+from objects.flight import Flight
+from objects.voyage import Voyage
+from objects.collection import Collection
 
 class File:
     def write(self,f, arr):
@@ -30,9 +31,11 @@ class File:
         with open("data/destinations.csv", "w+") as f:
             self.write(f,destinations)
 
-    def writeFlight(self, flight):
+    def writeFlight(self, flights):
         with open("data/flight.csv","w+") as f:
-            self.write(f,destinations)
+            self.write(f,flights)
+
+    
         
     def readAirplane(self):
         with open("data/airplanes.csv", "r") as f:

@@ -26,13 +26,6 @@ class Voyage:
             return "Á leið heim"
         return "Lokið"
 
-<<<<<<< HEAD
-    def __str__(self):
-        return None #f"{self.seatSold},{self.outFlight},{self.returnFlight},{self.flightCaptain},"+\
-               #f"{self.flightAssistant},{self.headAttendant},{self.flightAttendants}
-
-=======
->>>>>>> 1ab77c496cd771741c561d3667ada66171ca9f4a
     def __str__(self):
         # csv representation
         voyageDict = vars(self)
