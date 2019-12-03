@@ -16,3 +16,18 @@ class Flight:
         for val in flightDict.values():
             output += f"{val},"
         return output[:-1] # strip last comma
+
+
+    def __str__(self):
+        # csv representation
+        flightDict = vars(self)
+        valuesStr = [str(x) for x in flightDict.values()]
+        return ",".join(valuesStr)
+
+    def __repr__(self):
+        # debug repr
+        output = "Flight: ["
+        items = vars(self)
+        for key in items:
+            output += f"{key}: {items[key]}, "
+        return output.strip() + "]"
