@@ -15,11 +15,8 @@ class Airplane:
 
     def __str__(self):
         # csv representation
-        output = ""
         airplaneDict = vars(self)
-        for val in airplaneDict.values():
-            output += f"{val},"
-        return output[:-1] # strip last comma
+        return ",".join(list(airplaneDict.values()))
 
     def __repr__(self):
         # debug repr
