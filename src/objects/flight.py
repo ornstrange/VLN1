@@ -1,5 +1,5 @@
-from airplane import Airplane
-from destination import Destination
+from .airplane import Airplane
+from .destination import Destination
 
 class Flight:
     def __init__(self, airplane, destination, departure, flightNr):
@@ -28,4 +28,4 @@ class Flight:
         for key in items:
             output += f"{key}: {items[key]}, "
         return output.strip() + "]"
-    
+

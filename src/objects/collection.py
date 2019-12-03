@@ -1,8 +1,8 @@
 # test purposes
 import datetime
-from airplane import Airplane
-from destination import Destination
-from voyage import Voyage
+from .airplane import Airplane
+from .destination import Destination
+from .voyage import Voyage
 
 class Collection:
     def __init__(self, data):

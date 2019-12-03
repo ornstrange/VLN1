@@ -1,6 +1,6 @@
 import curses
 from curses import panel
-from menu import Menus
+from .menu import Menus
 
 class Windows:
     # call for top panels.window
