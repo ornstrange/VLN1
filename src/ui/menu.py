@@ -1,4 +1,4 @@
-import curses as cur
+import curses
 
 class Menus:
     def __init__(self):
