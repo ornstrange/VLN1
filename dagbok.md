@@ -37,3 +37,26 @@ Fara yfir öll atriðin sem þarf að koma fram í skýrslunni.
 + Leggja lokahönd á skýrsluna og skila henni í lok dags(Allir)
 ## Lok dags 
 Skila skýrslunni.
+
+# Dabókarfærsla 2.12.2019
+## Upphaf dags 
+Byrja að kynna okkur verkefnið og leggja grunn uppsetningu á kerfinu sjálfu 
+## Markmið dags
++ búa til grunn uppsetningu t.d. main, menu, window, og nokkur klasa
+## Lok dags
+Vera komnir með nokkuð skýra uppsetningu á kerfinu 
+
+# Dabókarfærsla 2.12.2019
+## Upphaf dags
+Uppsetning á kerfinu er klár
+## Markmið dags 
++ Bæta við string fall í alla objects
++ klára filter föll sem virka fyrir öll object 
++ Búa til read föll í File 
++ Búa til write föll í File 
++ Breyta prufugögnum yfir á okkar form 
+## Lok dags
+Vera komnir með gögnin sem gefin voru yfir á okkar form og einnig komnir með read og write föll í File.
+
+
+
