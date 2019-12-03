@@ -46,7 +46,7 @@ Byrja að kynna okkur verkefnið og leggja grunn uppsetningu á kerfinu sjálfu
 ## Lok dags
 Vera komnir með nokkuð skýra uppsetningu á kerfinu 
 
-# Dabókarfærsla 2.12.2019
+# Dabókarfærsla 3.12.2019
 ## Upphaf dags
 Uppsetning á kerfinu er klár
 ## Markmið dags 
