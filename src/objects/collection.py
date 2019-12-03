@@ -1,7 +1,6 @@
 # test purposes
 from airplane import Airplane
 
-
 class Collection:
     def __init__(self, data):
         self.all = data
