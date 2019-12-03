@@ -16,7 +16,8 @@ class Airplane:
     def __str__(self):
         # csv representation
         airplaneDict = vars(self)
-        return ",".join(list(airplaneDict.values()))
+        valuesStr = [str(x) for x in airplaneDict.values()]
+        return ",".join(valuesStr)
 
     def __repr__(self):
         # debug repr

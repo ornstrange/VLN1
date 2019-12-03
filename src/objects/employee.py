@@ -1,5 +1,5 @@
 class Employee:
-    def __init__(self, name, ssn, address, landline, mobile, email, rank, License):
+    def __init__(self, name, ssn, address, landline, mobile, email, rank, license = False):
         self.name = name
         self.ssn = ssn
         self.address = address
@@ -7,7 +7,7 @@ class Employee:
         self.mobile = mobile
         self.email = email
         self.rank = rank
-        self.license = License
+        self.license = license
 
     def __str__(self):
         # csv representation

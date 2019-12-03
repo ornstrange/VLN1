@@ -35,7 +35,7 @@ if __name__ == "__main__":
     from datetime import timedelta, datetime
     from destination import Destination
     from flight import Flight
-    from employee import Employee, Pilot
+    from employee import Employee
     from airplane import Airplane
     seatSold = 50
     plane = Airplane(5,"t1","boeing",101)
@@ -43,10 +43,10 @@ if __name__ == "__main__":
     dest2 = Destination("is","wowair",dest.flightTime.seconds,dest.distance,"palli","5554889")
     outFlight = Flight(plane, dest, datetime.strptime("28 11 2019", "%d %m %Y"), "test1")
     retFlight = Flight(plane, dest2, datetime.strptime("29 11 2019", "%d %m %Y"), "test2")
-    captn = Pilot("Kalli","1234567890","Hraun 2","555-1234","868-3322","kalli@kallz.is","737 max")
-    asstn = Pilot("Palli","1234567890","Hraun 4","555-4321","868-2323","palli@pallz.is","737 max")
-    topfa = Employee("Gugga","1234567908","Hraun 6","555-1234","868-3322","guggz@kallz.is")
-    other = Employee("Pugga","1234567908","Hraun 8","555-4321","868-2323","puggz@pallz.is")
+    captn = Employee("Kalli","1234567890","Hraun 2","555-1234","868-3322","kalli@kallz.is", "captn", "737 max")
+    asstn = Employee("Palli","1234567890","Hraun 4","555-4321","868-2323","palli@pallz.is", "asstn", "737 max")
+    topfa = Employee("Gugga","1234567908","Hraun 6","555-1234","868-3322","guggz@kallz.is", "top")
+    other = Employee("Pugga","1234567908","Hraun 8","555-4321","868-2323","puggz@pallz.is", "basic")
     voyage = Voyage(seatSold, outFlight, retFlight, captn, asstn, topfa, [other])
 
     print(voyage)
