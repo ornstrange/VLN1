@@ -14,8 +14,8 @@ class File:
             #header row
             f.write("id,type,maker,nrSeats\n")
             #data rows
-            for i in airplanes:
-                f.write(f"{e.id},{e.type},{e.maker}, {e.nrSeats}\n")
+            for e in airplanes:
+                f.write(f"{e.id},{e.type},{e.planeInsignia},{e.model}, {e.nrSeats},{e.emptyweight},{e.maxTakeOffWeight},{e.unitThrust},{e.serviceCeiling},{e.length},{e.height},{e.wingspan}\n")
 
 
     def writeVoyages(self, voyages):
@@ -23,7 +23,7 @@ class File:
             #header row
             f.write("seatSold,outFlight,returnFlight,flightCaptain,flightAssistant,headAttendant,flightAttendants\n")
             #data rows
-            for i in voyages:
+            for e in voyages:
                 f.write(f"{e.seatSold},{e.outFlight}, {e.returnFlight}, {e.flightCaptain}, {e.flightAssistant}, {e.headAttentant}, {e.flightAttendants}\n")
 
 
@@ -32,7 +32,7 @@ class File:
             #header row
             f.write(f"country,airport,flightTime,distance,contactName,contactNr\n")
             #data rows
-            for i in destinations:
+            for e in destinations:
                 f.write(f"{e.country},{e.airport},{e.flightTime},{e.distance}, {e.contactName}, {e.contactNr}\n")
 
     pass
