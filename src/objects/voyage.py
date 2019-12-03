@@ -26,12 +26,32 @@ class Voyage:
             return "Á leið heim"
         return "Lokið"
 
-    def __str__(self):
+    """def __str__(self):
         return f"{self.seatSold},{self.outFlight},{self.returnFlight},{self.flightCaptain},"+\
-               f"{self.flightAssistant},{self.headAttendant},{self.flightAttendants}"
+               f"{self.flightAssistant},{self.headAttendant},{self.flightAttendants}""""
+
+    def __str__(self):
+        # csv representation
+        voyageDict = vars(self)
+        voyageDictVals = voyageDict.values()
+        for i in range(len(voyageDictVals)):
+            if type(voyageDictVals[i]).__name__ == "Flight":
+                voyageDictVals[i] = voyageDictVals[i].flightnr
+            if type(voyageDictVals[i]).__name__ == "Employee":
+                voyageDictVals[i] = voyageDictVals[i].ssn
+        valuesStr = [str(x) for x in flightDictVals]
+        return ",".join(valuesStr)
+
+        def __repr__(self):
+        # debug repr
+        output = "Voyage: ["
+        items = vars(self)
+        for key in items:
+            output += f"{key}: {items[key]}, "
+        return output.strip() + "]"
 
 
-if __name__ == "__main__":
+"""if __name__ == "__main__":
     from datetime import timedelta, datetime
     from destination import Destination
     from flight import Flight
@@ -79,4 +99,4 @@ if __name__ == "__main__":
     other2 = Employee("Pugga","1234567908","Hraun 8","555-4321","868-2323","puggz@pallz.is", "basic")
     voyage2 = Voyage(seatSold2, outFlight2, retFlight2, captn2, asstn2, topfa2, [other2])
 
-    print(voyage2)
+    print(voyage2)"""
