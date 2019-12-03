@@ -1,6 +1,5 @@
 import curses
 from curses import panel
-
 from menu import Menus
 
 class Windows:
