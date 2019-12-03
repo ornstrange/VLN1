@@ -22,4 +22,6 @@ Backup of *.doc*
 *.xlk
 
 # Ignore pycharm and ide stuff
+.idea/
 .idea/*
+
