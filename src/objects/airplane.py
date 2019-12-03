@@ -1,9 +1,11 @@
 class Airplane:
     #def __init__(self, id, type, model,nrSeats,emptyWeight, maxTakeOffWeight, unitThrust, serviceCeiling, length, height, wingspan):
-    def __init__(self, id, type, model, nrSeats):
+    def __init__(self, id, type, model, maker, nrSeats):
+        #kenniheiti á vél t.d. NAFokkerF100
         self.id = id
         self.type = type
         self.model = model
+        self.maker = maker
         self.nrSeats = nrSeats
         #self.emptyWeight = emptyWeight
         #self.maxTakeOffWeight = maxTakeOffWeight
