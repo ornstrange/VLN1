@@ -27,8 +27,7 @@ class Voyage:
         return "Lokið"
 
     def __str__(self):
-        return f"{self.seatSold},{self.outFlight},{self.returnFlight},{self.flightCaptain},"+\
-               f"{self.flightAssistant},{self.headAttendant},{self.flightAttendants}"
+        pass
 
 
 if __name__ == "__main__":

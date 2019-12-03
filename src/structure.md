@@ -19,7 +19,7 @@ objects // Data
     |
     --- collections.py // all instances of classes
 
-file.py // Reading and writing to file
+file.py // Reading and writing to files
 
 main.py // Run everything
 ```
