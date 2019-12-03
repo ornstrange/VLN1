@@ -46,9 +46,9 @@ class Collection:
 
 
 planes = Collection([
-    Airplane(5,"a","b",10),
-    Airplane(1,"c","d",20),
-    Airplane(10,"p","b",50)])
+    Airplane(5,"g","a","b",10),
+    Airplane(1,"l","c","d",20),
+    Airplane(10,"p","p","b",50)])
 
     
 
