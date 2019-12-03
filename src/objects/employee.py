@@ -1,17 +1,19 @@
 class Employee:
-    def __init__(self, name, ssn, address, landline, mobile, email, rank, role):
+    def __init__(self, name, ssn, address, landline, mobile, email, rank):
         self.name = name
         self.ssn = ssn
         self.address = address
-        self.landline = landline 
+        self.landline = landline
         self.mobile = mobile
         self.email = email
         self.rank = rank
-        self.role = role
-        
+        self.license
 
-class Pilot(Employee):
-    def __init__(self, name, ssn, address, landline, mobile, email, rank, role, license):
-        super().__init__(name, ssn, address, landline, mobile, email, rank, role)
-        self.license = license
+    def __str__(self):
+        # csv representation
+        output = ""
+        empDict = vars(self)
+        for val in empDict.values():
+            output += f"{val},"
+        return output[:-1] # strip last comma
 

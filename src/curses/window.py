@@ -36,20 +36,20 @@ class Windows:
         panel.update_panels()
         cur.doupdate()
 
+if __name__ == "__main__":
+    stdscr = cur.initscr()
+    cur.noecho()
+    cur.cbreak()
+    stdscr.keypad(True)
 
-stdscr = cur.initscr()
-cur.noecho()
-cur.cbreak()
-stdscr.keypad(True)
+    windows = Windows(stdscr)
 
-windows = Windows(stdscr)
+    windows.front("main")
+    windows().addstr("i am main")
+    windows().getch()
 
-#windows.front("main")
-windows().addstr("i am main")
-windows().getch()
-
-cur.nocbreak()
-stdscr.keypad(False)
-cur.echo()
-cur.endwin()
+    cur.nocbreak()
+    stdscr.keypad(False)
+    cur.echo()
+    cur.endwin()
 

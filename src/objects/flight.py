@@ -9,3 +9,10 @@ class Flight:
         self.arrival = self.departure + self.destination.flightTime
         self.flightNr = flightNr
 
+    def __str__(self):
+        # csv representation
+        output = ""
+        flightDict = vars(self)
+        for val in flightDict.values():
+            output += f"{val},"
+        return output[:-1] # strip last comma

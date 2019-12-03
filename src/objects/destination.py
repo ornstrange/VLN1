@@ -8,3 +8,11 @@ class Destination:
         self.distance = distance
         self.contactName = contactName
         self.contactNr = contactNr
+
+    def __str__(self):
+        # csv representation
+        output = ""
+        destDict = vars(self)
+        for val in destDict.values():
+            output += f"{val},"
+        return output[:-1] # strip last comma
