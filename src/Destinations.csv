@@ -1,7 +1,7 @@
-id,destination
-LYR,Longyearbyean
-GOH,Nuuk
-KUS,Kulusuk
-FAE,Thorshavn
-LWK,Tingwall
-KEF,Keflavik
+airportId;destination;Airport;Flighttime;Distance;Contact name;Contactnr. 
+LYR;Longyearbyean;Gong Airport;340;2850;Lars;112
+GOH;Nuuk;Nuuk Airport;483;2199;Lena;911
+KUS;Kulusuk;Sambo Airport;249;2390;Stephen;118
+FAE;Thorshavn;Party Airport;525;1560;Thors;1717
+LWK;Tingwall;Krispy Kreme Airport;652;3210;Klemmi;858
+KEF;Keflavik;Keflavik Airport;0;0;Haukur;1919
