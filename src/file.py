@@ -67,28 +67,43 @@ class File:
 
     def readDestination(self):
         with open("data/destinations.csv") as f:
-            csv_reader = csv.DictReader(f,delimiter=",")
+            csv_reader = csv.DictReader(f)
             destinations = []
             for row in csv_reader:
-                destination = Destination(row[0],row[1],row[2],row[3],row[4],row[5],row[6])
+                destination = Destination(row["airportID"],
+                    row["country"],
+                    row["airport"],
+                    row["flightTime"],
+                    row["distance"],
+                    row["contactName"],
+                    row["contactNr"])
                 destinations.append(destination)
         return destinations
 
     def readFlight(self):
         with open("data/flight.csv") as f:
-            csv_reader = csv.DictReader(f,delimiter=",")
+            csv_reader = csv.DictReader(f)
             flights = []
             for row in csv_reader:
-                flight = Flight(row[0],row[1],row[2],row[3])
+                flight = Flight(row["airplane"],
+                    row["destination"],
+                    row["departure"],
+                    row["flightNr"])
                 flights.append(flight)
         return flights
 
     def readVoyage(self):
         with open("data/voyage.csv") as f:
-            csv_reader = csv.DictReader(f,delimiter=",")
+            csv_reader = csv.DictReader(f)
             voyages = []
             for row in csv_reader:
-                voyage = Voyage(row[0],row[1],row[2],row[3],row[4],row[5],row[6])
+                voyage = Voyage(row["seatSold"],
+                    row["outFlight"],
+                    row["returnFlight"],
+                    row["flightCaptain"],
+                    row["flightAssistant"],
+                    row["headAttendant"],
+                    row["flightAttendants"])
                 voyages.append(voyage)
         return voyages
 
