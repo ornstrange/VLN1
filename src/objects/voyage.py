@@ -8,9 +8,7 @@ class Voyage:
         self.flightAssistant = flightAssistant
         self.headAttendant = headAttendant
         self.flightAttendants = flightAttendants
-
-    def emptySeats(self):
-        return outFlight.airplane.nrSeats - self.seatSold
+        self.emptySeats = outFlight.airplane.nrSeats - seatSold
 
     def status(self):
         timeNow = datetime.now()
@@ -35,7 +33,7 @@ class Voyage:
                 voyageDictVals[i] = voyageDictVals[i].flightnr
             if type(voyageDictVals[i]).__name__ == "Employee":
                 voyageDictVals[i] = voyageDictVals[i].ssn
-        valuesStr = [str(x) for x in flightDictVals]
+        valuesStr = [str(x) for x in voyageDictVals]
         return ",".join(valuesStr)
 
     def __repr__(self):

@@ -8,13 +8,13 @@ from objects.collection import Collection
 
 class File:
     def write(self,f, arr):
-        # header row
-        header = vars(arr[0])
+        # writes a list of objects to a
+        # csv file
+        header = vars(arr[0]) # header row
         f.write(",".join(list(header.keys())))
-        # data rows
-        for object in arr:
+        for object in arr: # data rows
             f.write(str(object))
-
+    
     def writeEmployees(self, employees):
         with open("data/employees.csv", "w+") as f:
             self.write(f,employees)
@@ -34,8 +34,6 @@ class File:
     def writeFlight(self, flights):
         with open("data/flight.csv","w+") as f:
             self.write(f,flights)
-
-
 
     def readAirplane(self):
         with open("data/aircraft.csv", "r") as f:
@@ -111,3 +109,12 @@ class File:
                     row["flightAttendants"])
                 voyages.append(voyage)
         return Collection(voyages)
+
+    def read(self):
+        #runs every read function in the right order
+        #returns a dictionary of the collections
+        return {"airplanes": self.readAirplane(),
+            "employees": self.readEmployee(),
+            "destinations": self.readDestination(),
+            "flights": self.readFlight(),
+            "voyages": self.readVoyage()}
