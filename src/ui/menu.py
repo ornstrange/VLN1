@@ -1,5 +1,8 @@
 import curses
 
 class Menus:
-    def __init__(self):
-        pass
+    main = ["Voyages", "Destinations", "Employees", "Airplanes", "Exit"]
+    sub = ["Add new", "View", "Go back"]
+    newVoyage = ["All new", "Use existing", "Go back"]
+    view = ["View all", "Search", "Go back"]
+

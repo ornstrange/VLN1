@@ -46,8 +46,8 @@ class Voyage:
                 output += f"{key}: {items[key]}, "
             return output.strip() + "]"
 
-
 if __name__ == "__main__":
+    # tests
     from datetime import timedelta, datetime
     from destination import Destination
     from flight import Flight
@@ -58,4 +58,3 @@ if __name__ == "__main__":
     dest = Destination("ru","ruair",18000,25000,"slavko","112",6)
     print(plane)
 
-  

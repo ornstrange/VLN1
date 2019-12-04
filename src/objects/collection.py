@@ -1,9 +1,3 @@
-# test purposes
-import datetime
-from .airplane import Airplane
-from .destination import Destination
-from .voyage import Voyage
-
 class Collection:
     def __init__(self, data):
         self.all = data
@@ -39,14 +33,13 @@ class Collection:
             return None
 
     def filterDate(self, begin, end):
+        # filters a list using a begin and end date
         try:
             return list(filter(lambda x: begin <= x.departure <= end, arr))
         except (ValueError, KeyError):
             return None
 
-
-# Tests
-
+"""
 planes = Collection([
     Airplane(5,"a","bruh","b",10),
     Airplane(1,"c","dude","d",20),
@@ -71,5 +64,4 @@ other1 = Employee("Pugga","1234567908","Hraun 8","555-4321","868-2323","puggz@pa
 voyage1 = Voyage(seatSold1, outFlight1, retFlight1, captn1, asstn1, topfa1, [other1])
 
 print(voyage1)
-
-
+"""
