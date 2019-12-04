@@ -1,6 +1,8 @@
-filestream = open("./testData/Aircraft.csv","r")
+import csv
 
-if filestream:
-    
-    for line in filestream: 
-        print(line.strip())
+with open("Aircraft.csv", newline="") as csvfile:
+    spamreader = csv.reader(csvfile)
+
+    for row in spamreader:
+        print(",".join(row))
+
