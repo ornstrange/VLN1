@@ -58,6 +58,12 @@ Uppsetning á kerfinu er klár
 ## Lok dags
 Náðum að klára öll markmið dagsins nema að breyta prufugögnum yfir á okkar form
 
+# Dabókarfærsla 4.12.2019
+## Upphaf dags
+Komið string föll í alla objects og read/write föll komið í File 
+## Markmið dags 
++ Klára að skrifa niður alla strengi fyrir valmyndir og bæta við filter og search möguleika
++ 
 
 
 
