@@ -28,4 +28,4 @@ class Flight:
         for key in items:
             output += f"{key}: {items[key]}, "
         return output.strip() + "]"
-    
+

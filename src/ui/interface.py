@@ -1,7 +1,6 @@
 import curses as cur
 
-from window import Windows
-from menu import Menus
+from .window import Windows
 
 class Interface:
     def __init__(self, stdscr):
