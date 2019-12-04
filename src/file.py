@@ -38,20 +38,30 @@ class File:
 
 
     def readAirplane(self):
-        with open("Aircr.csv", "r") as f:
+        with open("data/aircraft.csv", "r") as f:
             csv_reader = csv.DictReader(f)
             planes = []
             for row in csv_reader:
-                plane = Airplane(row["id"],row["type"],row["model"],row["maker"],row["nrseats"])
+                plane = Airplane(row["id"],
+                    row["type"],
+                    row["model"],
+                    row["maker"],
+                    row["nrseats"])
                 planes.append(plane)
         return planes
 
     def readEmployee(self):
         with open("data/employees.csv") as f:
-            csv_reader = csv.DictReader(f,delimiter=",")
+            csv_reader = csv.DictReader(f)
             employees = []
             for row in csv_reader:
-                employee = Employee(row[0],row[1],row[2],row[3],row[4],row[5],row[6])
+                employee = Employee(row["name"],
+                    row["ssn"],
+                    row["address"],
+                    row["mobile"],
+                    row["email"],
+                    row["ranl"],
+                    row["license"])
                 employees.append(employee)
         return employees
 
