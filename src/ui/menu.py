@@ -6,3 +6,4 @@ class Menus:
     newVoyage = ["All new", "Use existing", "Go back"]
     view = ["View all", "Search", "Go back"]
 
+
