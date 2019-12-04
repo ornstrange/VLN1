@@ -38,11 +38,11 @@ class File:
 
 
     def readAirplane(self):
-        with open("data/airplanes.csv", "r") as f:
-            csv_reader = csv.DictReader(f,delimiter=",")
+        with open("Aircr.csv", "r") as f:
+            csv_reader = csv.DictReader(f)
             planes = []
             for row in csv_reader:
-                plane = Airplane(row[0],row[1],row[2],row[3],row[4])
+                plane = Airplane(row["id"],row["type"],row["model"],row["maker"],row["nrseats"])
                 planes.append(plane)
         return planes
 
@@ -52,7 +52,7 @@ class File:
             employees = []
             for row in csv_reader:
                 employee = Employee(row[0],row[1],row[2],row[3],row[4],row[5],row[6])
-                employees.append(empl)
+                employees.append(employee)
         return employees
 
     def readDestination(self):
@@ -69,7 +69,7 @@ class File:
             csv_reader = csv.DictReader(f,delimiter=",")
             flights = []
             for row in csv_reader:
-                flight = Flight(row[0],row[1],row[2],row[3],row[4])
+                flight = Flight(row[0],row[1],row[2],row[3])
                 flights.append(flight)
         return flights
 
@@ -84,4 +84,5 @@ class File:
 
 
 
-
+aircraft = File.readAirplane(None)
+print(aircraft)
