@@ -56,7 +56,10 @@ Uppsetning á kerfinu er klár
 + Búa til write föll í File 
 + Breyta prufugögnum yfir á okkar form 
 ## Lok dags
-Vera komnir með gögnin sem gefin voru yfir á okkar form og einnig komnir með read og write föll í File.
+Náðum að klára öll markmið dagsins nema að breyta prufugögnum yfir á okkar form
+
+
+
 
 
 
