@@ -42,20 +42,22 @@ class File:
             csv_reader = csv.DictReader(f)
             planes = []
             for row in csv_reader:
-                plane = Airplane(row["id"],
+                plane = Airplane(
+                    row["id"],
                     row["type"],
                     row["model"],
                     row["maker"],
                     row["nrseats"])
                 planes.append(plane)
-        return planes
+        return Collection(planes)
 
     def readEmployee(self):
         with open("data/employees.csv") as f:
             csv_reader = csv.DictReader(f)
             employees = []
             for row in csv_reader:
-                employee = Employee(row["name"],
+                employee = Employee(
+                    row["name"],
                     row["ssn"],
                     row["address"],
                     row["mobile"],
@@ -63,14 +65,15 @@ class File:
                     row["ranl"],
                     row["license"])
                 employees.append(employee)
-        return employees
+        return Collection(employees)
 
     def readDestination(self):
         with open("data/destinations.csv") as f:
             csv_reader = csv.DictReader(f)
             destinations = []
             for row in csv_reader:
-                destination = Destination(row["airportID"],
+                destination = Destination(
+                    row["airportID"],
                     row["country"],
                     row["airport"],
                     row["flightTime"],
@@ -78,26 +81,28 @@ class File:
                     row["contactName"],
                     row["contactNr"])
                 destinations.append(destination)
-        return destinations
+        return Collection(destinations)
 
     def readFlight(self):
         with open("data/flight.csv") as f:
             csv_reader = csv.DictReader(f)
             flights = []
             for row in csv_reader:
-                flight = Flight(row["airplane"],
+                flight = Flight(
+                    row["airplane"],
                     row["destination"],
                     row["departure"],
                     row["flightNr"])
                 flights.append(flight)
-        return flights
+        return Collection(flights)
 
     def readVoyage(self):
         with open("data/voyage.csv") as f:
             csv_reader = csv.DictReader(f)
             voyages = []
             for row in csv_reader:
-                voyage = Voyage(row["seatSold"],
+                voyage = Voyage(
+                    row["seatSold"],
                     row["outFlight"],
                     row["returnFlight"],
                     row["flightCaptain"],
@@ -105,9 +110,4 @@ class File:
                     row["headAttendant"],
                     row["flightAttendants"])
                 voyages.append(voyage)
-        return voyages
-
-
-
-aircraft = File.readAirplane(None)
-print(aircraft)
+        return Collection(voyages)
