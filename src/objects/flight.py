@@ -3,7 +3,7 @@ class Flight:
         self.airplane = airplane
         self.destination = destination
         self.departure = departure
-        self.arrival = self.departure + self.destination.flightTime
+        self.arrival = departure + destination.flightTime
         self.flightNr = flightNr
 
     def __str__(self):

@@ -1,11 +1,9 @@
 from datetime import timedelta
 
 class Destination:
-    def __init__(self,airportId,country, airport, flightTime, distance, contactName, contactNr):
-        #stytting á flugvelli, t.d. KEF
-        self.country = country
-        self.airportId = airportId
-        self.airport = airport
+    def __init__(self,id, destination, flightTime, distance, contactName, contactNr):
+        self.id = id
+        self.destination = destination
         self.flightTime = timedelta(seconds=flightTime)
         self.distance = distance
         self.contactName = contactName

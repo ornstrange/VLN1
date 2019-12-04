@@ -1,21 +1,10 @@
 class Airplane:
-    #def __init__(self, id, type, model,nrSeats,emptyWeight, maxTakeOffWeight, unitThrust, serviceCeiling, length, height, wingspan):
-    def __init__(self, insignia, id, type, model, maker, nrSeats):
-        #Nafn vélarinnar t.d. TF-EPG
-        self.insigna = insignia
-        #kenniheiti á vél t.d. NAFokkerF100
+    def __init__(self, id, type, model, maker, nrSeats):
         self.id = id
         self.type = type
         self.model = model
         self.maker = maker
         self.nrSeats = nrSeats
-        #self.emptyWeight = emptyWeight
-        #self.maxTakeOffWeight = maxTakeOffWeight
-        #self.unitThrust = unitThrust
-        #self.serviceCeiling = serviceCeiling
-        #self.length = length
-        #self.height = height
-        #self.wingspan = wingspan
 
     def __str__(self):
         # csv representation

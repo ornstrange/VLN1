@@ -2,6 +2,9 @@ class Collection:
     def __init__(self, data):
         self.all = data
 
+    def __getitem__(self, index):
+        return self.all[index]
+
     def sort(self, key):
         try:
             return sorted(self.all, key=lambda x: vars(x)[key])
@@ -28,7 +31,7 @@ class Collection:
                 if not filtered:
                     # No match, dont bother continuing
                     return None
-            return filtered
+            return filtered if len(filtered) > 1 else filtered[0]
         except (KeyError, ValueError):
             return None
 

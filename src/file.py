@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 from objects.airplane import Airplane
 from objects.employee import Employee
 from objects.destination import Destination
@@ -14,13 +15,13 @@ class File:
         f.write(",".join(list(header.keys())))
         for object in arr: # data rows
             f.write(str(object))
-    
+
     def writeEmployees(self, employees):
         with open("data/employees.csv", "w+") as f:
             self.write(f,employees)
 
     def writeAirplanes(self, airplanes):
-        with open("data/airplaines.csv", "w+") as f:
+        with open("data/airplanes.csv", "w+") as f:
             self.write(f,airplanes)
 
     def writeVoyages(self, voyages):
@@ -32,11 +33,11 @@ class File:
             self.write(f,destinations)
 
     def writeFlight(self, flights):
-        with open("data/flight.csv","w+") as f:
+        with open("data/flights.csv","w+") as f:
             self.write(f,flights)
 
-    def readAirplane(self):
-        with open("data/aircraft.csv", "r") as f:
+    def readAirplanes(self):
+        with open("data-yeet/airplanes.csv", "r") as f:
             csv_reader = csv.DictReader(f)
             planes = []
             for row in csv_reader:
@@ -45,12 +46,12 @@ class File:
                     row["type"],
                     row["model"],
                     row["maker"],
-                    row["nrseats"])
+                    row["nrSeats"])
                 planes.append(plane)
         return Collection(planes)
 
-    def readEmployee(self):
-        with open("data/employees.csv") as f:
+    def readEmployees(self):
+        with open("data-yeet/employees.csv") as f:
             csv_reader = csv.DictReader(f)
             employees = []
             for row in csv_reader:
@@ -60,61 +61,74 @@ class File:
                     row["address"],
                     row["mobile"],
                     row["email"],
-                    row["ranl"],
+                    row["rank"],
                     row["license"])
                 employees.append(employee)
         return Collection(employees)
 
-    def readDestination(self):
-        with open("data/destinations.csv") as f:
+    def readDestinations(self):
+        with open("data-yeet/destinations.csv") as f:
             csv_reader = csv.DictReader(f)
             destinations = []
             for row in csv_reader:
                 destination = Destination(
-                    row["airportID"],
-                    row["country"],
-                    row["airport"],
-                    row["flightTime"],
+                    row["id"],
+                    row["destination"],
+                    int(row["flightTime"]),
                     row["distance"],
                     row["contactName"],
                     row["contactNr"])
                 destinations.append(destination)
         return Collection(destinations)
 
-    def readFlight(self):
-        with open("data/flight.csv") as f:
+    def readFlights(self, airplanes, destinations):
+        with open("data-yeet/flights.csv") as f:
             csv_reader = csv.DictReader(f)
             flights = []
             for row in csv_reader:
                 flight = Flight(
-                    row["airplane"],
-                    row["destination"],
-                    row["departure"],
+                    airplanes.filter(("id", row["airplane"])),
+                    destinations.filter(("id", row["destination"])),
+                    datetime.strptime(row["departure"],"%Y-%m-%dT%H:%M:%S"),
                     row["flightNr"])
                 flights.append(flight)
         return Collection(flights)
 
-    def readVoyage(self):
-        with open("data/voyage.csv") as f:
+    def readVoyages(self, flights, employees):
+        with open("data-yeet/voyages.csv") as f:
             csv_reader = csv.DictReader(f)
             voyages = []
             for row in csv_reader:
                 voyage = Voyage(
-                    row["seatSold"],
-                    row["outFlight"],
-                    row["returnFlight"],
-                    row["flightCaptain"],
-                    row["flightAssistant"],
-                    row["headAttendant"],
-                    row["flightAttendants"])
+                    int(row["seatSold"]),
+                    flights.filter("id", row["outFlight"]),
+                    flights.filter("id", row["returnFlight"]),
+                    employees.filter("ssn", row["flightCaptain"]),
+                    employees.filter("ssn", row["flightAssistant"]),
+                    employees.filter("ssn", row["headAttendant"]),
+                    employees.filter("ssn", row["flightAttendants"]))
                 voyages.append(voyage)
         return Collection(voyages)
 
     def read(self):
-        #runs every read function in the right order
-        #returns a dictionary of the collections
-        return {"airplanes": self.readAirplane(),
-            "employees": self.readEmployee(),
-            "destinations": self.readDestination(),
-            "flights": self.readFlight(),
-            "voyages": self.readVoyage()}
+        # runs every read function in the correct order
+        # returns a dictionary of the collections
+        airplanes = self.readAirplanes()
+        employees = self.readEmployees()
+        destinations = self.readDestinations()
+        flights = self.readFlights(airplanes, destinations)
+        voyages = self.readVoyages(flights, employees)
+        return {"airplanes": airplanes,
+                "employees": employees,
+                "destinations": destinations,
+                "flights": flights,
+                "voyages": voyages}
+
+
+if __name__ == "__main__":
+    f = File()
+    airplanes = f.readAirplanes()
+    employees = f.readEmployees()
+    destinations = f.readDestinations()
+    flights = f.readFlights(airplanes, destinations)
+    voyages = f.readVoyages(flights, employees)
