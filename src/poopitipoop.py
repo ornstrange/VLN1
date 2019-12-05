@@ -1,19 +1,7 @@
-import csv
-
-def initializeFlight():
-    with open("data-yeetyeet/UPDATEDSTUDENTDATA/PastFlights.csv","r") as f:
-        flightList = []
-        csv_reader = csv.DictReader(f)
-        for row in csv_reader:
-            if row["arrivingAt"]
-            flightList.append([row["aircraftID"],row["arrivingAt"],row["departure"],"fNum",50])
-
-    return flightList
-
-listinn = initializeFlight()
-print(listinn[0])
-
 from datetime import datetime
+from objects.airplane import Airplane
+from objects.collection import Collection
+from objects.employee import Employee
 from objects.flight import Flight
 from objects.voyage import Voyage
 from random import randint
@@ -37,7 +25,7 @@ while True:
         else:
             dayCounter = 0
         flightNr += str(dayCounter * 2)
-        
+
         f1 = Flight(
             l1[5],
             l1[2],
@@ -55,7 +43,7 @@ while True:
         voy = Voyage(
             f1.flightNr,
             f2.flightNr,
-            
+
         )
     except:
         break

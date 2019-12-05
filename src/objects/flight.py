@@ -6,11 +6,12 @@ class Flight:
         self.arrival = departure + destination.flightTime
         self.flightNr = flightNr
         self.seatSold = seatSold
+        self.id = hash(self)
 
     def __str__(self):
         # csv representation
         flightDict = vars(self)
-        flightDictVals = flightDict.values()
+        flightDictVals = list(flightDict.values())
         for i in range(len(flightDictVals)):
             if type(flightDictVals[i]).__name__ == "Airplane":
                 flightDictVals[i] = flightDictVals[i].id

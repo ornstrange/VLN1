@@ -1,9 +1,8 @@
 import curses as cur
 
-from .window import Windows
+from .screens import Top, Sub, View, Add, Search, List
 
 class Interface:
     def __init__(self, stdscr):
-        windows = Windows(stdscr)
-        windows.printLines()
+        self.current = Top(stdscr)
 

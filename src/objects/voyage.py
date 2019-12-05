@@ -7,7 +7,7 @@ class Voyage:
         self.flightAssistant = flightAssistant
         self.headAttendant = headAttendant
         self.flightAttendants = flightAttendants
-        self.emptySeats = outFlight.airplane.nrSeats - seatSold
+        #self.emptySeats = outFlight.airplane.nrSeats - seatSold
 
     def status(self):
         timeNow = datetime.now()
@@ -26,12 +26,14 @@ class Voyage:
     def __str__(self):
         # csv representation
         voyageDict = vars(self)
-        voyageDictVals = voyageDict.values()
+        voyageDictVals = list(voyageDict.values())
         for i in range(len(voyageDictVals)):
             if type(voyageDictVals[i]).__name__ == "Flight":
-                voyageDictVals[i] = voyageDictVals[i].flightNr
+                voyageDictVals[i] = voyageDictVals[i].id
             if type(voyageDictVals[i]).__name__ == "Employee":
                 voyageDictVals[i] = voyageDictVals[i].ssn
+            if type(voyageDictVals[i]).__name__ == "list":
+                voyageDictVals[i] = ";".join([x.ssn for x in voyageDictVals[i]])
         valuesStr = [str(x) for x in voyageDictVals]
         return ",".join(valuesStr)
 
