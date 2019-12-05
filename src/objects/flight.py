@@ -11,13 +11,13 @@ class Flight:
         # csv representation
         flightDict = vars(self)
         flightDictVals = flightDict.values()
-        for i in range(len(flightDictVals)):
-            if type(flightDictVals[i]).__name__ == "Airplane":
+        for i in range(len(flightDictVals)):#loops through lenght of flightDictVals
+            if type(flightDictVals[i]).__name__ == "Airplane":#if Airplane is found
                 flightDictVals[i] = flightDictVals[i].id
-            if type(flightDictVals[i]).__name__ == "Destination":
+            if type(flightDictVals[i]).__name__ == "Destination":#if Destination is found
                 flightDictVals[i] = flightDictVals[i].id
         valuesStr = [str(x) for x in flightDictVals]
-        return ",".join(valuesStr)
+        return ",".join(valuesStr)#returns in a new list
 
     def __repr__(self):
         # debug repr
