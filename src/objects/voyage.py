@@ -10,6 +10,7 @@ class Voyage:
         self.emptySeats = outFlight.airplane.nrSeats - seatSold
 
     def status(self):
+        #Gives flight status by comparing flight schedule to present time.
         timeNow = datetime.now()
         outFlight = self.outFlight
         returnFlight = self.returnFlight
