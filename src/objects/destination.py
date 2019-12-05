@@ -12,7 +12,7 @@ class Destination:
 
 
     def __str__(self):
-        destinationDict = vars(self)  # makes dictionary form self
+        destinationDict = vars(self)  # makes dictionary form self, where example self.id is key and id is value 
         valuesStr = [str(x) for x in destinationDict.values()]
         return ",".join(valuesStr)
 
@@ -20,8 +20,7 @@ class Destination:
         output = "Destination: ["
         items = vars(self)
         for key in items:
-            output += f"{key}: {items[key]}, "
-            print(output)
+            output += f"{key}: {items[key]}, " 
         return output.strip() + "]"
 
-__repr__(self)
+
