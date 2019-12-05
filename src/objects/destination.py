@@ -12,15 +12,16 @@ class Destination:
 
 
     def __str__(self):
-        # csv representation
-        destinationDict = vars(self)
+        destinationDict = vars(self)  # makes dictionary form self
         valuesStr = [str(x) for x in destinationDict.values()]
         return ",".join(valuesStr)
 
     def __repr__(self):
-        # debug repr
         output = "Destination: ["
         items = vars(self)
         for key in items:
             output += f"{key}: {items[key]}, "
+            print(output)
         return output.strip() + "]"
+
+__repr__(self)
