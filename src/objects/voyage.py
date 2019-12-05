@@ -40,11 +40,11 @@ class Voyage:
 
     def __repr__(self):
         # debug repr
-            output = "Voyage: ["
-            items = vars(self)
-            for key in items:
-                output += f"{key}: {items[key]}, "
-            return output.strip() + "]"
+        output = "Voyage: ["
+        items = vars(self)
+        for key in items:
+            output += f"{key}: {items[key]}, "
+        return output.strip() + "]"
 
 if __name__ == "__main__":
     # tests

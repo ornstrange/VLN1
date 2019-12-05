@@ -38,7 +38,7 @@ class File:
             self.write(f,flights)
 
     def readAirplanes(self):
-        with open("data-yeet/airplanes.csv", "r") as f:
+        with open("data/airplanes.csv", "r") as f:
             csv_reader = csv.DictReader(f)
             planes = []
             for row in csv_reader:
@@ -52,7 +52,7 @@ class File:
         return Collection(planes)
 
     def readEmployees(self):
-        with open("data-yeet/employees.csv") as f:
+        with open("data/employees.csv") as f:
             csv_reader = csv.DictReader(f)
             employees = []
             for row in csv_reader:
@@ -68,7 +68,7 @@ class File:
         return Collection(employees)
 
     def readDestinations(self):
-        with open("data-yeet/destinations.csv") as f:
+        with open("data/destinations.csv") as f:
             csv_reader = csv.DictReader(f)
             destinations = []
             for row in csv_reader:
@@ -84,7 +84,7 @@ class File:
         return Collection(destinations)
 
     def readFlights(self, airplanes, destinations):
-        with open("data-yeet/flights.csv") as f:
+        with open("data/flights.csv") as f:
             csv_reader = csv.DictReader(f)
             flights = []
             for row in csv_reader:
@@ -97,7 +97,7 @@ class File:
         return Collection(flights)
 
     def readVoyages(self, flights, employees):
-        with open("data-yeet/voyages.csv") as f:
+        with open("data/voyages.csv") as f:
             csv_reader = csv.DictReader(f)
             voyages = []
             for row in csv_reader:
@@ -132,12 +132,8 @@ class File:
 
 if __name__ == "__main__":
     file = File()
-    airplanes = file.readAirplanes()
-    employees = file.readEmployees()
-    destinations = file.readDestinations()
-    flightsArr = []
-    voyArr = []
-
+    file.read()
+    """
     f = open("data-yeetyeet/UPDATEDSTUDENTDATA/PastFlights.csv", "r")
     _header = f.readline()
     lastDate = None
@@ -176,8 +172,12 @@ if __name__ == "__main__":
             randint(20,60)
         )
         fas = []
-        for p in l1[9].split(";"):
-            fas.append(employees.filter(("ssn", p)))
+        #print(l1[-1].strip().split(";"))
+        for p in l1[-1].strip().split(";"):
+            atnd = employees.filter(("ssn", p))
+            if atnd != None:
+                fas.append(atnd)
+
         voy = Voyage(
             f1,
             f2,
@@ -197,4 +197,4 @@ if __name__ == "__main__":
     file.writeAirplanes(airplanes.all)
     file.writeFlight(flights.all)
     file.writeVoyages(voyages.all)
-
+    """
