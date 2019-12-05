@@ -63,7 +63,22 @@ Náðum að klára öll markmið dagsins nema að breyta prufugögnum yfir á ok
 Komið string föll í alla objects og read/write föll komið í File 
 ## Markmið dags 
 + Klára að skrifa niður alla strengi fyrir valmyndir og bæta við filter og search möguleika
-+ 
++ Vinna i read föllunum 
++ Skoða nánar hvaða gögn við þurfum að hafa í kerfinu okkar
+## Lok dags 
+Þurfum að skoða aðeins nánar hvaða gögn við ætlum að vinna úr og þá getum við loks klárað að filtera föllin sem virka fyrir öll objects
+
+# Dabókarfærsla 5.12.2019
+## Upphaf dags
+Byrjum á að lagfæra csv skránna
+## Markmið dags 
++ Leggja lokahönd að uppröðun á csv skránnum 
++ byrja að commenta öll föll og skrifa hvað kemur inn og hvað fer út/gerist
+
+## Lok dags 
+blah blah blah 
+
+
 
 
 
