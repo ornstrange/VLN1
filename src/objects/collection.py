@@ -6,8 +6,9 @@ class Collection:
         return self.all[index]
 
     def sort(self, key):
+        #sorts a list using key
         try:
-            return sorted(self.all, key=lambda x: vars(x)[key])
+            return sorted(self.all, key=lambda x: vars(x)[key]) 
         except KeyError:
             return self.all
 
