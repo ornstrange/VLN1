@@ -18,7 +18,7 @@ class Flight:
             if type(flightDictVals[i]).__name__ == "Destination":
                 flightDictVals[i] = flightDictVals[i].id
         valuesStr = [str(x) for x in flightDictVals]
-        return ",".join(valuesStr)
+        return ",".join(valuesStr)# returns in a new list
 
     def __repr__(self):
         # debug repr

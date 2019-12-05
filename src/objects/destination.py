@@ -22,9 +22,10 @@ class Destination:
         return ",".join(valuesStr)
 
     def __repr__(self):
-        # debug repr
         output = "Destination: ["
         items = vars(self)
         for key in items:
             output += f"{key}: {items[key]}, "
         return output.strip() + "]"
+
+
