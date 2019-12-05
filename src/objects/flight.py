@@ -1,11 +1,11 @@
 class Flight:
-    def __init__(self, airplane, destination, departure, flightNr, soldSeats):
+    def __init__(self, airplane, destination, departure, flightNr, seatSold):
         self.airplane = airplane
         self.destination = destination
         self.departure = departure
         self.arrival = departure + destination.flightTime
         self.flightNr = flightNr
-        self.soldSeats = soldSeats
+        self.seatSold = seatSold
 
     def __str__(self):
         # csv representation

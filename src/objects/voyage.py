@@ -1,7 +1,6 @@
 class Voyage:
-    def __init__(self, seatSold, outFlight, returnFlight, flightCaptain,
+    def __init__(self, outFlight, returnFlight, flightCaptain,
                  flightAssistant, headAttendant, flightAttendants):
-        self.seatSold = seatSold
         self.outFlight = outFlight
         self.returnFlight = returnFlight
         self.flightCaptain = flightCaptain
