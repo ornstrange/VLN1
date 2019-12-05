@@ -1,7 +1,8 @@
 from datetime import timedelta
 
 class Destination:
-    def __init__(self,id, destination, flightTime, distance, contactName, contactNr):
+    def __init__(self, id, destination, flightTime,
+                 distance, contactName, contactNr):
         self.id = id
         self.destination = destination
         self.flightTime = timedelta(seconds=flightTime)

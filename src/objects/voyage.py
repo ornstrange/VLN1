@@ -30,7 +30,7 @@ class Voyage:
         voyageDictVals = voyageDict.values()
         for i in range(len(voyageDictVals)):
             if type(voyageDictVals[i]).__name__ == "Flight":
-                voyageDictVals[i] = voyageDictVals[i].flightnr
+                voyageDictVals[i] = voyageDictVals[i].flightNr
             if type(voyageDictVals[i]).__name__ == "Employee":
                 voyageDictVals[i] = voyageDictVals[i].ssn
         valuesStr = [str(x) for x in voyageDictVals]

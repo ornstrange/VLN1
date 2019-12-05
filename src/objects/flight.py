@@ -1,10 +1,11 @@
 class Flight:
-    def __init__(self, airplane, destination, departure, flightNr):
+    def __init__(self, airplane, destination, departure, flightNr, soldSeats):
         self.airplane = airplane
         self.destination = destination
         self.departure = departure
         self.arrival = departure + destination.flightTime
         self.flightNr = flightNr
+        self.soldSeats = soldSeats
 
     def __str__(self):
         # csv representation
@@ -14,7 +15,7 @@ class Flight:
             if type(flightDictVals[i]).__name__ == "Airplane":
                 flightDictVals[i] = flightDictVals[i].id
             if type(flightDictVals[i]).__name__ == "Destination":
-                flightDictVals[i] = flightDictVals[i].country
+                flightDictVals[i] = flightDictVals[i].id
         valuesStr = [str(x) for x in flightDictVals]
         return ",".join(valuesStr)
 

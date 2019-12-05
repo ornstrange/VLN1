@@ -25,7 +25,8 @@ class Collection:
         try:
             for key, val in args:
                 if type(key).__name__ == "datetime":
-                    filtered = self.filterDate(filtered, key, val)
+                    begin, end = key, val
+                    filtered = self.filterDate(filtered, begin, end)
                 else:
                     filtered = self.filterKeyVal(filtered, key, val)
                 if not filtered:
