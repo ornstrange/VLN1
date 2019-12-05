@@ -34,3 +34,7 @@ class Windows:
         panel.update_panels()
         curses.doupdate()
 
+    def printLines(self):
+        menus = Menus()
+        self().addstr(menus.topLine(10))
+        self().addstr(menus.botLine(5))
