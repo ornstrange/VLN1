@@ -21,4 +21,3 @@ class Screen:
                 attr = curses.A_NORMAL
             self.window.move(self.h)
 
-
