@@ -1,4 +1,4 @@
-airplane,destination,departure,arrival,flightNr,seatSold,id
+airplane,destination,departure,arrival,flightNr,seatSold
 TF-TYQ,LYR,2019-11-02T06:21:00,2019-11-02T12:01:00,NA470,37
 TF-TYQ,KEF,2019-11-02T11:21:00,2019-11-02T11:21:00,NA471,23
 TF-XZR,LYR,2019-11-04T05:32:00,2019-11-04T11:12:00,NA470,37

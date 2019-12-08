@@ -6,14 +6,12 @@ from objects.destination import Destination
 from objects.flight import Flight
 from objects.voyage import Voyage
 from objects.collection import Collection
-from random import randint
 
 class File:
     def writeArray(self,f, arr):
         # writes a list of objects to a
         # csv file
-        header = vars(arr[0]) # header row
-        f.write(",".join(list(header.keys())) + "\n")
+        f.write(arr[0].header() + "\n") # header row
         for object in arr: # data rows
             f.write(str(object) + "\n")
 
@@ -144,3 +142,20 @@ class File:
                 "flights": flights,
                 "voyages": voyages}
 
+"""
+if __name__ == "__main__":
+    f = File()
+    all_obj = f.read()
+
+    fs = all_obj["flights"].all
+    vs = all_obj["voyages"].all
+
+    for i in range(len(fs)):
+        vi = i//2
+        if i % 2 == 0:
+            vs[vi].outFlight = fs[i]
+        else:
+            vs[vi].returnFlight = fs[i]
+
+    f.write("voyages",all_obj["voyages"])
+"""
