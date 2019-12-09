@@ -1,8 +1,10 @@
 import curses as cur
 
-from .screens import Top, Sub, View, Add, Search, List
+from .screens import Screen
 
 class Interface:
     def __init__(self, stdscr):
-        self.current = Top(stdscr)
+        self.main = stdscr
+        self.main = Screen()
+        self.sub = Screen()
 
