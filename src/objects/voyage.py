@@ -57,4 +57,5 @@ if __name__ == "__main__":
     plane = Airplane(5,"t1","boeing",101,67)
     dest = Destination("ru","ruair",18000,25000,"slavko","112",6)
     print(plane)
+    print(dest)
 
