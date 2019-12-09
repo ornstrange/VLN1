@@ -1,61 +1,61 @@
 ```
-Vinnuferðir
+Voyages
     |
-    --- Búa til nýja
+    --- Register a Voyage
     |   |
-    |   --- Eins og gömul
+    |   --- Use a (Previously) Registered Voyage
     |   |
-    |   --- Alveg ný
+    |   --- Create a New Voyage
     |
-    --- Yfirlit
+    --- Overview
         |
-        --- Sýna alla
+        --- Show all Voyages
         |   |
-        |   ->- Velja og Breyta
+        |   ->- Choose & Edit
         |
-        --- Leit
+        --- Search
             |
-            ->- Breyta
+            ->- Edit
 
-Áfangastaðir
+Destinations
     |
-    --- Bæta við nýjum
+    --- Add a New Destination
     |
-    --- Yfirlit
+    --- Overview
         |
-        --- Sýna alla
+        --- Show all Destinations
         |   |
-        |   ->- Velja og Breyta
+        |   ->- Choose & Edit
         |
-        --- Leit
+        --- Search
             |
-            ->- Breyta
+            ->- Edit
 
-Starfsmenn
+Employees
     |
-    --- Bæta við nýjum
+    --- Register an Employee
     |
-    --- Yfirlit
+    --- Overivew
         |
-        --- Sýna alla
+        --- Show All Employees
         |   |
-        |   ->- Velja og Breyta
+        |   ->- Choose & Edit
         |
-        --- Leit
+        --- Search
             |
-            ->- Breyta
+            ->- Edit
 
-Flugvélar
+Aircrafts
     |
-    --- Bæta við nýrri
+    --- Register an Aircraft
     |
-    --- Yfirlit
+    --- Overview
         |
-        --- Sýna allar
+        --- Show all Aircrafts
         |   |
-        |   ->- Velja og Breyta
+        |   ->- Choose & edit
         |
-        --- Leit
+        --- Search
             |
-            ->- Breyta
+            ->- Edit
 ```

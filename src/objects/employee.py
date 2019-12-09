@@ -15,6 +15,9 @@ class Employee:
         valuesStr = [str(x) for x in employeeDict.values()]
         return ",".join(valuesStr)
 
+    def header(self):
+        return ",".join(vars(self))
+
     def __repr__(self):
         # debug repr
         output = "Employee: ["

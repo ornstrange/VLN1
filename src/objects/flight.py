@@ -26,3 +26,7 @@ class Flight:
         valuesStr = [str(x) for x in flightDictVals]
         return ",".join(valuesStr)
 
+    def header(self):
+        headerRow = vars(self)
+        headerRowNoId = list(headerRow)[:-1]
+        return ",".join(headerRowNoId)

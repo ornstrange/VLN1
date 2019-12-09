@@ -21,6 +21,9 @@ class Destination:
         valuesStr = [str(x) for x in destDictVals]
         return ",".join(valuesStr)
 
+    def header(self):
+        return ",".join(vars(self))
+
     def __repr__(self):
         output = "Destination: ["
         items = vars(self)
