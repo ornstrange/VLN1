@@ -12,9 +12,9 @@ class Screen:
 
 class Menu(Screen):
     def __init__(self, parent,
+                 entries,
                  height = MENU_HEIGHT,
-                 width = MENU_WIDTH,
-                 entries):
+                 width = MENU_WIDTH):
         super.__init__(super, height, width, parent)
         self.entries = entries
         self.selected = 0
@@ -28,10 +28,9 @@ class Menu(Screen):
         return self.entries[self.selected]
 
 class Input(Screen):
-    def __init__(self, parent,
+    def __init__(self, parent, fields, rules, finished,
                  height = MENU_HEIGHT,
-                 width = MENU_WIDTH,
-                 fields, rules, finished):
+                 width = MENU_WIDTH):
         super.__init__(super, height, width, parent)
         self.fields = fields
         self.rules = rules
@@ -59,10 +58,9 @@ class Input(Screen):
 
 
 class List(Screen):
-    def __init__(self, parent,
+    def __init__(self, parent, onSelect, entries, 
                  height = MENU_HEIGHT,
-                 width = MENU_WIDTH,
-                 onSelect, entries):
+                 width = MENU_WIDTH):
         super.__init__(super, height, width, parent)
         self.onSelect = onSelect
         self.entries = entries # collection of objects
@@ -81,7 +79,7 @@ class List(Screen):
         # get possible sort options
         pass
 
-    def select():
+    def select(self):
         # returns the screen with selected object passed to it
         pass
         #return self.onSelect.fields = vars(self.selected)
