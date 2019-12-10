@@ -1,40 +1,47 @@
 import curses
 
-MENU_HEIGHT = 40
-MENU_WIDTH  = 30
-
 class Screen:
-    def __init__(self, height, width, parent):
+    def __init__(self, parent, height, width):
         self.parent = parent
         self.height = height
         self.width = width
         self.window = curses.newwin(self.height, self.width)
+        self.collection = None
 
 class Menu(Screen):
-    def __init__(self, parent,
-                 entries,
-                 height = MENU_HEIGHT,
-                 width = MENU_WIDTH):
-        super.__init__(super, height, width, parent)
-        self.entries = entries
+    def __init__(self, parent, height, width):
+        super().__init__(parent, height, width)
+        self.entries = None # {"entry": screen}
         self.selected = 0
 
     def draw(self):
         # draws menu with selected entry highlighted
-        pass
+        self.window.clear()
+        self.window.box()
+
+        center = self.width // 2
+
+        for i, entry in enumerate(self.entries):
+            text = entry[0]
+            if self.collection:
+                text = text.replace("*", type(self.collection[0]).__name__.lower())
+            offset = center - (len(text) // 2)
+            self.window.move(i + 2, offset)
+            if self.selected == i:
+                self.window.addstr(text, curses.A_NORMAL)
+            else:
+                self.window.addstr(text, curses.A_DIM)
 
     def go(self):
         # return the screen of the selected entry
         return self.entries[self.selected]
 
 class Input(Screen):
-    def __init__(self, parent, fields, rules, finished,
-                 height = MENU_HEIGHT,
-                 width = MENU_WIDTH):
-        super.__init__(super, height, width, parent)
-        self.fields = fields
-        self.rules = rules
-        self.finished = finished # screen when done
+    def __init__(self, parent, height, width):
+        super().__init__(parent, height, width)
+        self.fields = None
+        self.rules = None
+        self.finished = None
 
     def draw(self):
         # draws input fields, with data if there is any
@@ -52,19 +59,17 @@ class Input(Screen):
         # change existing object
         pass
 
-    def add(self, collection, new):
+    def add(self, collection):
         # add new object to collection
         pass
 
 
 class List(Screen):
-    def __init__(self, parent, onSelect, entries, 
-                 height = MENU_HEIGHT,
-                 width = MENU_WIDTH):
-        super.__init__(super, height, width, parent)
-        self.onSelect = onSelect
-        self.entries = entries # collection of objects
-        self.selected = self.entries[0]
+    def __init__(self, parent, height, width):
+        super().__init__(parent, height, width)
+        self.onSelect = None
+        self.entries = None
+        self.selected = 0
 
     def draw(self):
         # draws entries, with filter, sort and view options
@@ -82,5 +87,4 @@ class List(Screen):
     def select(self):
         # returns the screen with selected object passed to it
         pass
-        #return self.onSelect.fields = vars(self.selected)
 

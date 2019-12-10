@@ -28,6 +28,10 @@ class Collection:
         except (ValueError, KeyError):
             return None
 
+    def filterRegex(self, key, reg, arr):
+        # filters a list using a key, bla
+        return None
+
     def filter(self, *args):
         # filters all elements using a list of
         # (key, value) tuples
@@ -37,6 +41,8 @@ class Collection:
                 if type(key).__name__ == "datetime":
                     begin, end = key, val
                     filtered = self.filterDate(begin, end, filtered)
+                elif type(val).__name__ == "regex":
+                    filtered = self.filterRegex(key, val, filtered)
                 else:
                     filtered = self.filterKeyVal(key, val, filtered)
                 if not filtered:
@@ -45,5 +51,4 @@ class Collection:
             return filtered if len(filtered) > 1 else filtered[0]
         except (KeyError, ValueError):
             return None
-
 
