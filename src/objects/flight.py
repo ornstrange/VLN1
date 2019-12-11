@@ -8,7 +8,7 @@ class Flight:
         self.arrival = departure + destination.flightTime
         self.flightNr = flightNr
         self.seatSold = seatSold
-        self.id = createId()
+        self.id = self.createId()
         
     def createId(self):
         flightId = str(self.departure.year)
