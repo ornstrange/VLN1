@@ -1,7 +1,5 @@
-import uuid
 
 class Flight:
-    namespace = uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8')
 
     def __init__(self, airplane, destination, departure, flightNr, seatSold):
         self.airplane = airplane
@@ -10,7 +8,18 @@ class Flight:
         self.arrival = departure + destination.flightTime
         self.flightNr = flightNr
         self.seatSold = seatSold
-        self.id = uuid.uuid3(Flight.namespace, str(self.departure))
+        self.id = self.createId()
+        
+    def createId(self):
+        flightId = str(self.departure.year)
+        flightId += str(self.departure.month)
+        flightId += str(self.departure.day)
+        flightId += str(self.departure.hour)
+        flightId += str(self.departure.minute)
+        flightId += str(self.departure.second)
+        flightId = int(flightId)
+        flightId = hex(flightId)[2:]
+        return flightId
 
     def __str__(self):
         # csv representation
