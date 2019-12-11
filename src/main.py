@@ -3,21 +3,26 @@ from ui.interface import Interface
 from file import File
 
 def main(stdscr):
+    # create collections from file
     f = File()
     all_collections = f.read()
+
+    # hide the cursor
     try:
         curses.curs_set(0)
     except:
         pass
+
     screenHeight, screenWidth = stdscr.getmaxyx()
-    interface = Interface(stdscr)
-    current = interface.view
-    current.collection = all_collections["voyages"]
-    currentWin = current.window
-    currentWin.mvwin(screenHeight // 2 - current.height // 2,
-                     screenWidth // 2 - current.width // 2)
-    current.draw()
-    currentWin.getch()
+    interface = Interface(stdscr) # init interface
+    interface().window.keypad(True)
+    while True:
+        interface().center(screenHeight, screenWidth)
+        interface.draw()
+        if interface().mainMenu:
+            interface.parseKeyMain(all_collections)
+        else:
+            interface.parseKey()
 
 
 if __name__ == "__main__":
