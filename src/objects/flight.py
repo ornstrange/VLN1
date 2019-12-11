@@ -10,8 +10,18 @@ class Flight:
         self.arrival = departure + destination.flightTime
         self.flightNr = flightNr
         self.seatSold = seatSold
-        self.id = hex(int(departure[2:4]+departure[5:7]+departure[8:10]+departure[11:13]+departure[14:16]+departure[17:19]))
+        self.id = createId()
         
+    def createId(self):
+        flightId = str(self.departure.year)
+        flightId += str(self.departure.month)
+        flightId += str(self.departure.day)
+        flightId += str(self.departure.hour)
+        flightId += str(self.departure.minute)
+        flightId += str(self.departure.second)
+        flightId = int(flightId)
+        flightId = hex(flightId)[2:]
+        return flightId
 
     def __str__(self):
         # csv representation
