@@ -15,11 +15,3 @@ class Airplane:
     def header(self):
         return ",".join(vars(self))
 
-    def __repr__(self):
-        # debug repr
-        output = "Airplane: ["
-        items = vars(self)
-        for key in items:
-            output += f"{key}: {items[key]}, "
-        return output.strip() + "]"
-

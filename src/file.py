@@ -61,7 +61,7 @@ class File:
                     row["maker"],
                     row["nrSeats"])
                 planes.append(plane)
-        return Collection(planes)
+        return Collection(planes, "airplanes")
 
     def readEmployees(self):
         with open("data/employees.csv") as f:
@@ -77,7 +77,7 @@ class File:
                     row["rank"],
                     row["license"])
                 employees.append(employee)
-        return Collection(employees)
+        return Collection(employees, "employees")
 
     def readDestinations(self):
         with open("data/destinations.csv") as f:
@@ -93,7 +93,7 @@ class File:
                     row["contactName"],
                     row["contactNr"])
                 destinations.append(destination)
-        return Collection(destinations)
+        return Collection(destinations, "destinations")
 
     def readFlights(self, airplanes, destinations):
         with open("data/flights.csv") as f:
@@ -107,7 +107,7 @@ class File:
                     row["flightNr"],
                     int(row["seatSold"]))
                 flights.append(flight)
-            return Collection(flights)
+            return Collection(flights, "flights")
 
     def readVoyages(self, flights, employees):
         with open("data/voyages.csv") as f:
@@ -126,7 +126,7 @@ class File:
                     employees.filter(("ssn", row["headAttendant"])),
                     fligthAttends)
                 voyages.append(voyage)
-        return Collection(voyages)
+        return Collection(voyages, "voyages")
 
     def read(self):
         # runs every read function in the correct order
@@ -142,20 +142,3 @@ class File:
                 "flights": flights,
                 "voyages": voyages}
 
-"""
-if __name__ == "__main__":
-    f = File()
-    all_obj = f.read()
-
-    fs = all_obj["flights"].all
-    vs = all_obj["voyages"].all
-
-    for i in range(len(fs)):
-        vi = i//2
-        if i % 2 == 0:
-            vs[vi].outFlight = fs[i]
-        else:
-            vs[vi].returnFlight = fs[i]
-
-    f.write("voyages",all_obj["voyages"])
-"""

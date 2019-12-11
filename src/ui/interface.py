@@ -6,18 +6,17 @@ MENUWIDTH = 37
 EDITWIDTH = 40
 
 class Interface:
-    def __init__(self, stdscr):
-        self.base = stdscr
-        terH, terW = self.base.getmaxyx()
+    def __init__(self, screenHeight, screenWidth):
+        self.running = True
 
         # setting up screens with parents
         self.main = Menu(None, 9, MENUWIDTH)
         self.sub = Menu(self.main, 7, MENUWIDTH)
         self.add = Input(self.sub, 18, EDITWIDTH)
-        self.addVoyage = Menu(self.sub, 7, MENUWIDTH)
+        self.addVoyage = Menu(self.sub, 8, MENUWIDTH)
         self.view = Menu(self.sub, 7, MENUWIDTH)
         self.find = Input(self.sub, 18, EDITWIDTH)
-        self.list = List(self.view, terH, terW)
+        self.list = List(self.view, screenHeight, screenWidth)
 
         # populating menu entries
         self.main.entries = [("Voyages", self.sub),
@@ -28,70 +27,99 @@ class Interface:
         self.sub.entries = [("Register new *", self.add),
                             ("View or edit *s", self.view),
                             ("Go back", None)]
-        self.addVoyage.entries = [("Copy from previous voyage", self.find),
-                                  ("Create new", self.add),
+        self.addVoyage.entries = [("Create new", self.add),
+                                  ("Copy from previous voyage", self.find),
+                                  ("Populate unmanned voyage", self.list),
                                   ("Go back", None)]
         self.view.entries = [("View all *s", self.list),
                              ("Find a specific *", self.find),
                              ("Go back", None)]
 
-        # init main menu and current window
-        self.main.mainMenu = True
+        # centering all screens
+        self.main.center(screenHeight, screenWidth)
+        self.sub.center(screenHeight, screenWidth)
+        self.add.center(screenHeight, screenWidth)
+        self.addVoyage.center(screenHeight, screenWidth)
+        self.view.center(screenHeight, screenWidth)
+        self.find.center(screenHeight, screenWidth)
+        self.list.center(screenHeight, screenWidth)
+
+        # init menu names and current window
+        self.main.name = "main menu"
+        self.sub.name = "sub menu"
+        self.add.name = "add"
         self.current = self.main
 
-    def __call__(self):
-        # idno
-        return self.current
-
     def draw(self):
-        self().draw()
+        self.current.draw()
 
     def parseKey(self):
-        keyInt = self().window.getch()
+        keyInt = self.current.window.getch()
 
-        if self().type == "menu":
+        if self.current.type == "menu":
             self.parseKeyMenu(keyInt)
-        elif self().type == "input":
+        elif self.current.type == "input":
             self.parseKeyInput(keyInt)
-        elif self().type == "list":
+        elif self.current.type == "list":
             self.parseKeyList(keyInt)
 
     def parseKeyMenu(self, keyInt):
+        selected = self.current.selected
         if keyInt in [KEY_UP, KEY_DOWN]:
-            safeRange = range(len(self().entries))
+            safeRange = range(len(self.current.entries))
             direction = 1 if keyInt == KEY_DOWN else -1
-            if self().selected + direction in safeRange:
-                self().selected += direction
+            if selected + direction in safeRange:
+                self.current.selected += direction
         elif keyInt == ord("\n"): # enter pressed
-            if self.current.entries[self().selected][1]:
-                self.changeScreen(self().entries[self().selected])
+            if self.current.entries[selected][1]:
+                name = self.current.entries[selected][1].name
+                colType = self.current.collection.name
+                if name == "add" and colType == "voyages":
+                    self.changeScreen(self.addVoyage)
+                else:
+                    self.changeScreen(self.current.go())
             else: # go back
-                self.current = self().parent
+                self.changeScreen(self.current.parent)
 
-    def parseKeyMain(self, all_collections):
-        keyInt = self().window.getch()
+    def parseKeyMainMenu(self, all_collections):
+        keyInt = self.current.window.getch()
         if keyInt in [KEY_UP, KEY_DOWN]:
-            safeRange = range(len(self().entries))
+            safeRange = range(len(self.current.entries))
             direction = 1 if keyInt == KEY_DOWN else -1
-            if self().selected + direction in safeRange:
-                self().selected += direction
+            if self.current.selected + direction in safeRange:
+                self.current.selected += direction
         elif keyInt == ord("\n"): # enter pressed
-            if self().entries[self().selected][1]:
-                curCollectionStr = self().entries[self().selected][0]
-                curCollection = all_collections[curCollectionStr.lower()]
-                self().collection = curCollection
-                self.changeScreen(self().entries[self().selected])
+            if self.current.go():
+                collectionStr = self.current.entries[self.current.selected][0]
+                collection = all_collections[collectionStr.lower()]
+                self.current.collection = collection
+                self.changeScreen(self.current.go())
             else: # go back
-                exit()
+                self.running = False
+
+    def parseKeyList(self, keyInt):
+        selected = self.current.selected
+        if keyInt in [KEY_UP, KEY_DOWN]:
+            safeRange = range(len(self.current.pages[self.current.page]))
+            direction = 1 if keyInt == KEY_DOWN else -1
+            if selected + direction in safeRange:
+                self.current.selected += direction
+            elif selected + direction == -1:
+                self.current.page -= 1 if self.current.page else 0
+                self.current.selected = 0
+            elif self.current.page != self.current.maxPage:
+                self.current.page += 1
+                self.current.selected = 0
+
+        elif keyInt == ord("\n"): # enter pressed
+            pass
 
     def changeScreen(self, newScreen):
-        # later element of tuple is the screen
-        newScreen = newScreen[1]
         # clear current screen
         self.current.clear()
         # pass collection down to next screen
         newScreen.collection = self.current.collection
         self.current = newScreen
-        self.current.selected = 0
-        self.current.window.keypad(True)
+        if self.current.type == "menu":
+            self.current.selected = 0
 

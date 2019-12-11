@@ -1,8 +1,9 @@
 from copy import deepcopy
 
 class Collection:
-    def __init__(self, data):
+    def __init__(self, data, name):
         self.all = data
+        self.name = name
 
     def __getitem__(self, index):
         return self.all[index]

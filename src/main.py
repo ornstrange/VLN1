@@ -2,6 +2,23 @@ import curses
 from ui.interface import Interface
 from file import File
 
+def logo(stdscr, screenWidth):
+    logoStrings = [
+        "   /-/| /-/ /-----/ /-/| /-/",
+        "  / / |/ / / /=/ / / / |/ /",
+        " / /| / / / __  / / /| / /",
+        "/_/ |/_/ /_/ /_/ /_/ |/_/",
+        "",
+        "    /-----/ /-/ /-----/",
+        "   / /=/ / / / / /=/ /",
+        "  / __  / / / / _  _/",
+        " /_/ /_/ /_/ /_/ \_\\"
+    ]
+    for i, line in enumerate(logoStrings):
+        stdscr.move(i+3, (screenWidth // 2) - 14)
+        stdscr.addstr(line)
+    stdscr.refresh()
+
 def main(stdscr):
     # create collections from file
     f = File()
@@ -14,13 +31,13 @@ def main(stdscr):
         pass
 
     screenHeight, screenWidth = stdscr.getmaxyx()
-    interface = Interface(stdscr) # init interface
-    interface().window.keypad(True)
-    while True:
-        interface().center(screenHeight, screenWidth)
+    logo(stdscr, screenWidth) # draw logo
+
+    interface = Interface(screenHeight, screenWidth) # init interface
+    while interface.running:
         interface.draw()
-        if interface().mainMenu:
-            interface.parseKeyMain(all_collections)
+        if interface.current.name == "main menu":
+            interface.parseKeyMainMenu(all_collections)
         else:
             interface.parseKey()
 
