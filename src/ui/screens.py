@@ -118,7 +118,7 @@ class List(Screen):
         for i, entry in enumerate(self.pages[self.page]):
             attr = A_BOLD | A_REVERSE if self.selected == i else A_DIM
             self.window.move((i*2)+3, 1)
-            self.window.addstr(str(entry), attr)
+            self.tabulate(i, entry, attr)
             self.window.hline((i*2)+4, 1,curses.ACS_HLINE,self.width - 2)
         self.window.refresh()
 
@@ -128,6 +128,25 @@ class List(Screen):
         for i in range(0, len(self.collection.all), (self.height - 4) // 2):
             self.pages.append(self.collection[i:i+(self.height - 4)//2])
         self.maxPage = len(self.pages) - 1
+
+    def tabulate(self, i, entry, attr):
+        baseHeight = (i*2) + 3
+        items = vars(entry).items()
+        fieldWidth = (self.width - 2) // len(items)
+        for i, item in enumerate(items):
+            key, val = item
+            output = str(val)
+            if type(val).__name__ == "Employee":
+                output = val.name
+            elif type(val).__name__ == "Flight":
+                output = str(val.departure)
+            elif type(val).__name__ == "list":
+                output = ", ".join([x.name.split()[1] for x in val])
+
+            self.window.move(baseHeight, (fieldWidth*i) + 1)
+            self.window.addstr(f"{output:^{fieldWidth}}", attr)
+            self.window.move(baseHeight, (fieldWidth*i))
+            self.window.addch(curses.ACS_VLINE)
 
     def filterOptions(self):
         # get possible filter options

@@ -1,4 +1,6 @@
 class Airplane:
+    name = "airplane"
+
     def __init__(self, id, type, model, maker, nrSeats):
         self.id = id
         self.type = type

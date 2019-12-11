@@ -98,16 +98,18 @@ class Interface:
                 self.running = False
 
     def parseKeyList(self, keyInt):
-        selected = self.current.selected
+        current = self.current
+        selected = current.selected
         if keyInt in [KEY_UP, KEY_DOWN]:
-            safeRange = range(len(self.current.pages[self.current.page]))
+            safeRange = range(len(current.pages[current.page]))
             direction = 1 if keyInt == KEY_DOWN else -1
             if selected + direction in safeRange:
                 self.current.selected += direction
             elif selected + direction == -1:
-                self.current.page -= 1 if self.current.page else 0
-                self.current.selected = 0
-            elif self.current.page != self.current.maxPage:
+                if current.page != 0:
+                    self.current.page -= 1 if current.page else 0
+                    self.current.selected = len(current.pages[current.page]) - 1
+            elif current.page != current.maxPage:
                 self.current.page += 1
                 self.current.selected = 0
 

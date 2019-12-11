@@ -1,4 +1,6 @@
 class Employee:
+    name = "employee"
+
     def __init__(self, name, ssn, address, mobile, email, rank, license = False):
         self.name = name
         self.ssn = ssn
