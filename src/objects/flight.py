@@ -10,7 +10,8 @@ class Flight:
         self.arrival = departure + destination.flightTime
         self.flightNr = flightNr
         self.seatSold = seatSold
-        self.id = uuid.uuid3(Flight.namespace, str(self.departure))
+        self.id = hex(int(departure[2:4]+departure[5:7]+departure[8:10]+departure[11:13]+departure[14:16]+departure[17:19]))
+        
 
     def __str__(self):
         # csv representation
