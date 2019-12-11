@@ -1,7 +1,5 @@
-import uuid
 
 class Flight:
-    namespace = uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8')
 
     def __init__(self, airplane, destination, departure, flightNr, seatSold):
         self.airplane = airplane
