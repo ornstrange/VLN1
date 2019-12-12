@@ -32,10 +32,12 @@ class Collection:
 
     def filterRegex(self, key, reg, arr):
         # filters a list using a key, bla
+        """
         try:
             return list(filter(lambda x: vars(x)re.compile(reg).search == key, arr))
         except:
             return None
+        """
 
     def filter(self, *args):
         # filters all elements using a list of

@@ -101,8 +101,8 @@ class File:
             flights = []
             for row in csv_reader:
                 flight = Flight(
-                    airplanes.filter(("id", row["airplane"])),
-                    destinations.filter(("id", row["destination"])),
+                    airplanes.filter(("=", "id", row["airplane"])),
+                    destinations.filter(("=", "id", row["destination"])),
                     datetime.strptime(row["departure"],"%Y-%m-%dT%H:%M:%S"),
                     row["flightNr"],
                     int(row["seatSold"]))
@@ -119,11 +119,11 @@ class File:
                 for fas in flightAttendsSsn:
                     fligthAttends.append(employees.filter(("ssn", fas)))
                 voyage = Voyage(
-                    flights.filter(("id", row["outFlight"])),
-                    flights.filter(("id", row["returnFlight"])),
-                    employees.filter(("ssn", row["flightCaptain"])),
-                    employees.filter(("ssn", row["flightAssistant"])),
-                    employees.filter(("ssn", row["headAttendant"])),
+                    flights.filter(("=", "id", row["outFlight"])),
+                    flights.filter(("=", "id", row["returnFlight"])),
+                    employees.filter(("=", "ssn", row["flightCaptain"])),
+                    employees.filter(("=", "ssn", row["flightAssistant"])),
+                    employees.filter(("=", "ssn", row["headAttendant"])),
                     fligthAttends)
                 voyages.append(voyage)
         return Collection(voyages, "voyages")
