@@ -3,7 +3,7 @@ from curses import A_BOLD, A_REVERSE, A_NORMAL, A_DIM
 from curses.textpad import Textbox
 
 MENUWIDTH = 37
-EDITWIDTH = 60
+EDITWIDTH = 64
 EDITHEIGHT = 37
 
 class Screen:
@@ -23,7 +23,6 @@ class Screen:
     def clear(self):
         self.window.clear()
         self.window.refresh()
-
 
 class Menu(Screen):
     type = "menu"
@@ -73,12 +72,19 @@ class Input(Screen):
         self.window.clear()
         self.window.box()
         self.window.refresh()
-        if not self.textBoxes:
-            self.setupFields()
-        else:
-            for box, win in self.textBoxes:
-                win.box()
-                win.refresh()
+
+        # draw textboxes
+        for key in self.textBoxes:
+            box, win = self.textBoxes[key]
+            win.box()
+            win.refresh()
+
+        # descriptions
+        for i, field in enumerate(self.fields):
+            desc = field[1]
+            currentY = self.y + (i * 4)
+            self.window.move(currentY, 3)
+            self.window.addstr(desc)
 
     def check(self):
         # check if all fields are filled and correct
@@ -97,12 +103,15 @@ class Input(Screen):
         pass
 
     def createTextbox(self):
-        currentY = self.y + 2 + (len(self.textBoxes) * 4)
+        currentY = self.y + 3 + (len(self.textBoxes) * 4)
         _tempWin = curses.newwin(3, self.width - 4, currentY, self.x + 2)
+        _tempWin.box()
+        _tempWin.refresh()
         return (Textbox(_tempWin), _tempWin)
 
     def setupFields(self):
         # returns a list of fields to use in header
+        self.textBoxes = {}
         firstObject = self.collection[0]
         self.fields = firstObject.fieldsRules()
         for name, desc, rule in self.fields:

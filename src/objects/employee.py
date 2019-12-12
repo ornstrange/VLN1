@@ -41,6 +41,6 @@ class Employee:
              "Rank (ex. Captain / Pilot / Service Manager)",
              "[a-zA-Z]+"),
             ("license",
-             "Airplane license (ex. 737Max), leave empty for flight attendants",
+             "Airplane license (ex. 737Max), not for flight attendants",
              "[a-ZA-Z]*")
         ]

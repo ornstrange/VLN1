@@ -89,6 +89,8 @@ class Interface:
         elif keyInt == ord("\n"): # enter pressed
             if self.current.at():
                 self.changeScreen(self.current.at())
+                if self.current.type == "input":
+                    self.current.setupFields()
             else: # go back
                 self.changeScreen(self.current.parent)
 
@@ -132,6 +134,11 @@ class Interface:
             self.changeScreen(self.current.parent)
         elif keyInt == ord("\n"): # enter pressed
             self.current.at()
+
+    def parseKeyInput(self, keyInt):
+        if keyInt == ord("q"):
+            self.changeScreen(self.current.parent)
+
 
     def changeScreen(self, newScreen):
         # clear current screen
