@@ -1,4 +1,3 @@
-import csv
 class Airplane:
     name = "airplane"
 
