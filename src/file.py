@@ -155,10 +155,3 @@ if __name__ == "__main__":
             vs[vi].returnFlight = fs[i]
     f.write("voyages",all_obj["voyages"])
 """
-
-if __name__ == "__main__":
-    f = File()
-    all_obj = f.read()
-    airplanes = all_obj["airplanes"]
-    print(airplanes.filter(("=", "id", "TF-EPG")))
-    print(len(airplanes.all))
