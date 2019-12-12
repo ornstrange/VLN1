@@ -14,6 +14,7 @@ def logo(stdscr, screenWidth):
         "  / __  / / / / _  _/",
         " /_/ /_/ /_/ /_/ \_\\"
     ]
+    
     for i, line in enumerate(logoStrings):
         stdscr.move(i+3, (screenWidth // 2) - 14)
         stdscr.addstr(line)
