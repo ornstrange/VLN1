@@ -54,10 +54,12 @@ def main(stdscr):
     screenHeight, screenWidth = stdscr.getmaxyx()
 
     interface = Interface(screenHeight, screenWidth) # init interface
-    logo(stdscr, (screenWidth//6)-14, (screenHeight//3)-4) # draw logo
-    logo(stdscr, ((screenWidth*5)//6)-14, (screenHeight//3)-4) # draw logo
-    art(stdscr, screenHeight, screenWidth)
     while interface.running:
+        if interface.current.type == "menu":
+            logo(stdscr, (screenWidth//6)-14, (screenHeight//3)-4) # draw logo
+            logo(stdscr, ((screenWidth*5)//6)-14, (screenHeight//3)-4) # draw logo
+            art(stdscr, screenHeight, screenWidth)
+
         interface.draw()
         if interface.current == interface["main"]:
             interface.parseKeyMainMenu(all_collections)

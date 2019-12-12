@@ -61,12 +61,13 @@ class Menu(Screen):
 class Input(Screen):
     type = "input"
 
-    def __init__(self, parent, height=EDITHEIGHT, width=EDITWIDTH):
+    def __init__(self, parent, height=EDITHEIGHT, width=EDITWIDTH, finished=None):
         super().__init__(parent, height, width)
         self.fields = None
         self.rules = None
-        self.finished = None
+        self.finished = finished
         self.textBoxes = {}
+        self.selected = 7
 
     def draw(self):
         self.window.clear()
@@ -78,13 +79,27 @@ class Input(Screen):
             box, win = self.textBoxes[key]
             win.box()
             win.refresh()
-
         # descriptions
         for i, field in enumerate(self.fields):
             desc = field[1]
             currentY = self.y + (i * 4)
             self.window.move(currentY, 3)
             self.window.addstr(desc)
+
+        # confirm button
+        attr = A_NORMAL
+        output = "Confirm"
+        if self.selected == len(self.fields):
+            attr = A_BOLD | A_REVERSE
+            output = "> Confirm <"
+        self.window.addstr(self.y + self.height - 8,
+                           self.width//2 - len(output)//2,
+                           output, attr)
+
+        # quit instructions
+        self.window.addstr(self.y + self.height - 5,
+                           3,
+                           "(q) go back / cancel")
 
     def check(self):
         # check if all fields are filled and correct
@@ -121,9 +136,9 @@ class Input(Screen):
 class List(Screen):
     type = "list"
 
-    def __init__(self, parent, height, width):
+    def __init__(self, parent, height, width, onSelect = None):
         super().__init__(parent, height, width)
-        self.onSelect = None
+        self.onSelect = onSelect
         self.selected = 0
         self.page = 0
         self.pages = []

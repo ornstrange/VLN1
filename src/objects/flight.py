@@ -40,13 +40,3 @@ class Flight:
         headerRowNoId = list(headerRow)[:-1]
         return ",".join(headerRowNoId)
 
-    def fieldsRules(self):
-        return [
-            ("departure",
-             "Departure date (ex. 2018-10-09 23:52:48)",
-             "\d{4}(-\d{2}){2}\s\d{2}(:\d{2}){2}"),
-            ("seatSold",
-             "Number of seats sold (ex. 35)",
-             "\d+")
-        ]
-

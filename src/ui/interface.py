@@ -8,20 +8,23 @@ class Interface:
     def __init__(self, screenHeight, screenWidth):
         self.running = True
 
-        # setting up screens with parents and size
+        # setting up screens with parents, children and size
         main = Menu(None, 9)
         sub = Menu(main, 7)
         subVoy = Menu(main, 7)
-        add = Input(sub)
-        addVoy = Menu(sub, 8)
+        add = Input(sub, finished=sub)
+        addVoyMenu = Menu(sub, 8)
         view = Menu(sub, 7)
-        find = Input(sub)
-        edit = Input(find)
-        _list = List(view, screenHeight, screenWidth)
-        voySelMan = List(addVoy, screenHeight, screenWidth)
-        airSelVoy = List(addVoy, screenHeight, screenWidth)
-        empSelVoy = List(addVoy, screenHeight, screenWidth)
-        voySelCopy = List(addVoy, screenHeight, screenWidth)
+        _list = List(view, screenHeight, screenWidth, view)
+        find = Input(sub, finished=_list)
+        edit = Input(find, finished=view)
+        empSelVoy = List(addVoyMenu, screenHeight, screenWidth)
+        manVoy = Input(empSelVoy, finished=addVoyMenu)
+        empSelVoy.onSelect = manVoy
+        voySelMan = List(addVoyMenu, screenHeight, screenWidth, manVoy)
+        airSelVoy = List(addVoyMenu, screenHeight, screenWidth, addVoyMenu)
+        addVoy = Input(addVoyMenu, finished=airSelVoy)
+        voySelCopy = List(addVoyMenu, screenHeight, screenWidth, addVoy)
 
         self.screens = {
             "main": main,
@@ -29,10 +32,12 @@ class Interface:
             "subVoy": subVoy,
             "add": add,
             "addVoy": addVoy,
+            "addVoyMenu": addVoyMenu,
             "view": view,
             "find": find,
             "edit": edit,
             "list": _list,
+            "manVoy": manVoy,
             "voySelMan": voySelMan,
             "airSelVoy": airSelVoy,
             "empSelAdd": empSelVoy,
@@ -51,9 +56,9 @@ class Interface:
         self["subVoy"].entries = [("Register new voyage", self["addVoy"]),
                                ("View or edit voyages", self["view"]),
                                ("Go back", None)]
-        self["addVoy"].entries = [("Create new", self["add"]),
-                                  ("Copy from previous voyage", self["find"]),
-                                  ("Populate unmanned voyage", self["list"]),
+        self["addVoyMenu"].entries = [("Create new", self["addVoy"]),
+                                  ("Copy from previous voyage", self["voySelCopy"]),
+                                  ("Populate unmanned voyage", self["voySelMan"]),
                                   ("Go back", None)]
         self["view"].entries = [("View all *s", self["list"]),
                                 ("Find a specific *", self["find"]),
@@ -83,14 +88,16 @@ class Interface:
             self.parseKeyList(keyInt)
 
     def parseKeyMenu(self, keyInt):
-        selected = self.current.selected
+        nextScreen = self.current.at()
+        collection = self.current.collection
         if keyInt in [KEY_UP, KEY_DOWN]:
             self.traverseMenu(keyInt)
         elif keyInt == ord("\n"): # enter pressed
-            if self.current.at():
-                self.changeScreen(self.current.at())
-                if self.current.type == "input":
-                    self.current.setupFields()
+            if nextScreen:
+                if self.current.at() == self["add"] and collection.name == "voyages":
+                    self.changeScreen(self["addVoyMenu"])
+                else:
+                    self.changeScreen(nextScreen)
             else: # go back
                 self.changeScreen(self.current.parent)
 
@@ -150,4 +157,6 @@ class Interface:
             self.current.selected = 0
         if self.current.type == "list":
             self.current.page = 0
+        elif self.current.type == "input":
+            self.current.setupFields()
 

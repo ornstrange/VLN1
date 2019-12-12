@@ -117,7 +117,7 @@ class File:
                 flightAttendsSsn = row["flightAttendants"].split(";")
                 fligthAttends = []
                 for fas in flightAttendsSsn:
-                    fligthAttends.append(employees.filter(("ssn", fas)))
+                    fligthAttends.append(employees.filter(("=", "ssn", fas)))
                 voyage = Voyage(
                     flights.filter(("=", "id", row["outFlight"])),
                     flights.filter(("=", "id", row["returnFlight"])),
