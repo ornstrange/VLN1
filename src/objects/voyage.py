@@ -4,6 +4,8 @@
 import datetime
 
 class Voyage:
+    name = "voyage"
+
     def __init__(self, outFlight, returnFlight, flightCaptain,
                  flightAssistant, headAttendant, flightAttendants):
         self.outFlight = outFlight

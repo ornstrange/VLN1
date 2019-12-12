@@ -141,4 +141,17 @@ class File:
                 "destinations": destinations,
                 "flights": flights,
                 "voyages": voyages}
-
+"""
+if __name__ == "__main__":
+    f = File()
+    all_obj = f.read()
+    fs = all_obj["flights"].all
+    vs = all_obj["voyages"].all
+    for i in range(len(fs)):
+        vi = i//2
+        if i % 2 == 0:
+            vs[vi].outFlight = fs[i]
+        else:
+            vs[vi].returnFlight = fs[i]
+    f.write("voyages",all_obj["voyages"])
+"""

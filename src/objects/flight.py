@@ -1,5 +1,5 @@
-
 class Flight:
+    name = "flight"
 
     def __init__(self, airplane, destination, departure, flightNr, seatSold):
         self.airplane = airplane
@@ -9,7 +9,7 @@ class Flight:
         self.flightNr = flightNr
         self.seatSold = seatSold
         self.id = self.createId()
-        
+
     def createId(self):
         flightId = str(self.departure.year)
         flightId += str(self.departure.month)
