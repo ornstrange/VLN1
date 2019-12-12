@@ -77,6 +77,7 @@ class Input(Screen):
             self.setupFields()
         else:
             for box, win in self.textBoxes:
+                win.box()
                 win.refresh()
 
     def check(self):
@@ -98,8 +99,6 @@ class Input(Screen):
     def createTextbox(self):
         currentY = self.y + 2 + (len(self.textBoxes) * 4)
         _tempWin = curses.newwin(3, self.width - 4, currentY, self.x + 2)
-        _tempWin.box()
-        _tempWin.refresh()
         return (Textbox(_tempWin), _tempWin)
 
     def setupFields(self):
@@ -141,7 +140,7 @@ class List(Screen):
         fields = self.fields()
         fieldWidth = (self.width - 2) // len(fields)
         for i, key in enumerate(fields):
-            self.window.move(1, (fieldWidth*i) + 2)
+            self.window.move(1, (fieldWidth*i) + 1)
             self.window.addstr(f"{key:^{fieldWidth}}")
             if i != 0:
                 self.window.move(1, (fieldWidth*i) + 1)
