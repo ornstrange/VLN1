@@ -14,6 +14,11 @@ def logo(stdscr, x, y):
         "  / __  / / / / _  _/",
         " /_/ /_/ /_/ /_/ \_\\"
     ]
+<<<<<<< HEAD
+    
+    for i, line in enumerate(logoStrings):
+        stdscr.move(i+3, (screenWidth // 2) - 14)
+=======
     try:
         for i, line in enumerate(logoStrings):
             stdscr.move(i+y, x)
@@ -35,6 +40,7 @@ def art(stdscr, screenHeight, screenWidth):
     stdscr.hline(screenHeight-1,0,"_",screenWidth)
     for i, line in enumerate(art):
         stdscr.move((screenHeight - 7) + i, screenWidth//2 - (len(art[-1])//2))
+>>>>>>> fc6a71dfa3a2bf4a141542f47156613907a28113
         stdscr.addstr(line)
     stdscr.refresh()
 
