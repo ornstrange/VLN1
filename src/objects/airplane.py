@@ -1,4 +1,3 @@
-import csv
 class Airplane:
     name = "airplane"
 
@@ -19,6 +18,3 @@ class Airplane:
         return ",".join(vars(self))
 
 
-data = list(csv.reader(open("/Users/Arnar/VLN1/src/data/airplanes.csv")))
-testing = (data[1])
-print(testing)
