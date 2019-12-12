@@ -32,13 +32,14 @@ def art(stdscr, screenHeight, screenWidth):
         "    -|=|--o-----||--|---|=||---'   _o’    o     .        o o    | $$  |  |  |  $$ |",
         "_____|=|__|\\n___oo______|=|o________|_____|\\n   |     ___|\|\\n__|_____|  |  |_____|"
     ]
-
-    stdscr.hline(screenHeight-1,0,"_",screenWidth)
-    for i, line in enumerate(art):
-        stdscr.move((screenHeight - 7) + i, screenWidth//2 - (len(art[-1])//2))
-        stdscr.addstr(line)
-    stdscr.refresh()
-
+    try:
+        stdscr.hline(screenHeight-1,0,"_",screenWidth)
+        for i, line in enumerate(art):
+            stdscr.move((screenHeight - 7) + i, screenWidth//2 - (len(art[-1])//2))
+            stdscr.addstr(line)
+        stdscr.refresh()
+    except:
+        pass
 
 def main(stdscr):
     # create collections from file
