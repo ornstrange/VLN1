@@ -53,7 +53,10 @@ class Collection:
                 if not filtered:
                     # No match, dont bother continuing
                     return None
-            return Collection(filtered)
+            if len(filtered) == 1:
+                return filtered[0]
+            else:
+                return Collection(filtered, self.name)
         except (KeyError, ValueError):
             return None
 

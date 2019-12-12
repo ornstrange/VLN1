@@ -10,7 +10,10 @@ class Voyage:
         self.flightCaptain = flightCaptain
         self.flightAssistant = flightAssistant
         self.headAttendant = headAttendant
-        self.flightAttendants = flightAttendants
+        if type(flightAttendants).__name__ == "Collection":
+            self.flightAttendants = flightAttendants.all
+        else:
+            self.flightAttendants = flightAttendants
 
     def status(self):
         # Gives flight status by comparing flight schedule to present time.
