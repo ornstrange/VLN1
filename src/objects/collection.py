@@ -9,7 +9,7 @@ class Collection:
     def __getitem__(self, index):
         return self.all[index]
 
-    def sort(self, key):
+    def sort(self, key,arr):
         # sorts a list using key
         try:
             return sorted(arr, key=lambda x: vars(x)[key])
@@ -26,19 +26,16 @@ class Collection:
     def filterDate(self, begin, end, arr):
         # filters a list using a begin and end date
         try:
-            return list(filter(lambda x: begin <= x.departure <= end, arr))
+            return list(filter(lambda x: begin <= x.outflight.departure <= end, arr))
         except (ValueError, KeyError):
             return None
 
     def filterRegex(self, key, reg, arr):
         # filters a list using a key, bla
-        """
         try:
-            return list(filter(lambda x: re.search(reg, x[key]), arr))
-        except:
+            return list(filter(lambda x: re.search(reg, vars(x)[key]),arr))
+        except (KeyError, ValueError):
             return None
-        """
-
     def filter(self, *args):
         # filters all elements using a list of
         # (key, value) tuples
@@ -49,13 +46,14 @@ class Collection:
                     begin, end = key, val
                     filtered = self.filterDate(begin, end, filtered)
                 elif op == "?":
-                    filtered = self.filterRegex(key, val, filtered)
+                    reg = val
+                    filtered = self.filterRegex(key, reg, filtered)
                 elif op == "=":
                     filtered = self.filterKeyVal(key, val, filtered)
                 if not filtered:
                     # No match, dont bother continuing
                     return None
-            return filtered if len(filtered) > 1 else filtered[0]
+            return Collection(filtered)
         except (KeyError, ValueError):
             return None
 
