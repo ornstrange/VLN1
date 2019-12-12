@@ -1,6 +1,3 @@
-#from datetime import timedelta, now
-#from .flight import Flight
-
 import datetime
 
 class Voyage:
@@ -10,12 +7,6 @@ class Voyage:
                  flightAssistant, headAttendant, flightAttendants):
         self.outFlight = outFlight
         self.returnFlight = returnFlight
-        """self.returnFlight = Flight(
-            self.outFlight.airplane,
-            home,
-            self.outFlight.arrival + timedelta(seconds = 3600),
-            self.outFlight.flightNr[:-1] + str(int(self.outFlight.flightNr[-1]) + 1),
-            self.outFlight.seatSold)"""
         self.flightCaptain = flightCaptain
         self.flightAssistant = flightAssistant
         self.headAttendant = headAttendant

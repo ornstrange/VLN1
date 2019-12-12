@@ -20,10 +20,27 @@ class Employee:
     def header(self):
         return ",".join(vars(self))
 
-    def __repr__(self):
-        # debug repr
-        output = "Employee: ["
-        items = vars(self)
-        for key in items:
-            output += f"{key}: {items[key]}, "
-        return output.strip() + "]"
+    def fieldsRules(self):
+        return [
+            ("name",
+             "Name (ex. Paul Johnson)",
+             "([A-Z][a-z]+\s[A-Z][a-z]+)"),
+            ("ssn",
+             "Social Security Number (ex. 1910952789)",
+             "\d{10}"),
+            ("address",
+             "Address (ex. Midgard 5)",
+             "([A-Z][a-z]+\s\d+)"),
+            ("mobile",
+             "Mobile number (ex. 8689243)",
+             "\d{7}"),
+            ("email",
+             "Email address (ex. not@real.com)",
+             "([a-z]+@[a-z]+\.[a-z]+)"),
+            ("rank",
+             "Rank (ex. Captain / Pilot / Service Manager)",
+             "[a-zA-Z]+"),
+            ("license",
+             "Airplane license (ex. 737Max), leave empty for flight attendants",
+             "[a-ZA-Z]*")
+        ]

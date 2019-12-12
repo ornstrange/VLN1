@@ -1,8 +1,10 @@
 import curses
 from curses import A_BOLD, A_REVERSE, A_NORMAL, A_DIM
+from curses.textpad import Textbox
 
 MENUWIDTH = 37
 EDITWIDTH = 60
+EDITHEIGHT = 37
 
 class Screen:
     def __init__(self, parent, height, width):
@@ -14,8 +16,9 @@ class Screen:
         self.collection = None
 
     def center(self, termHeight, termWidth):
-        self.window.mvwin(termHeight // 2 - self.height // 2,
-                          termWidth // 2 - self.width // 2)
+        self.y = termHeight // 2 - self.height // 2
+        self.x = termWidth // 2 - self.width // 2
+        self.window.mvwin(self.y, self.x)
 
     def clear(self):
         self.window.clear()
@@ -59,16 +62,22 @@ class Menu(Screen):
 class Input(Screen):
     type = "input"
 
-    def __init__(self, parent, height, width=EDITWIDTH):
+    def __init__(self, parent, height=EDITHEIGHT, width=EDITWIDTH):
         super().__init__(parent, height, width)
         self.fields = None
         self.rules = None
         self.finished = None
+        self.textBoxes = {}
 
     def draw(self):
         self.window.clear()
         self.window.box()
         self.window.refresh()
+        if not self.textBoxes:
+            self.setupFields()
+        else:
+            for box, win in self.textBoxes:
+                win.refresh()
 
     def check(self):
         # check if all fields are filled and correct
@@ -85,6 +94,20 @@ class Input(Screen):
     def add(self):
         # add new object to collection
         pass
+
+    def createTextbox(self):
+        currentY = self.y + 2 + (len(self.textBoxes) * 4)
+        _tempWin = curses.newwin(3, self.width - 4, currentY, self.x + 2)
+        _tempWin.box()
+        _tempWin.refresh()
+        return (Textbox(_tempWin), _tempWin)
+
+    def setupFields(self):
+        # returns a list of fields to use in header
+        firstObject = self.collection[0]
+        self.fields = firstObject.fieldsRules()
+        for name, desc, rule in self.fields:
+            self.textBoxes[name] = self.createTextbox()
 
 
 class List(Screen):

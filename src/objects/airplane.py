@@ -17,3 +17,22 @@ class Airplane:
     def header(self):
         return ",".join(vars(self))
 
+    def fieldsRules(self):
+        return [
+            ("id",
+             "Identification Number (TF-***)",
+             "TF-[A-Z]{3}"),
+            ("type",
+             "Type of airplane (ex. 737Max)",
+             ".+"),
+            ("model",
+             "Airplane model (ex. 737)",
+             ".+"),
+            ("maker",
+             "Manufacturer (ex. Boeing)",
+             ".+"),
+            ("nrSeats",
+             "Number of seats (ex. 55)",
+             "\d+")
+        ]
+

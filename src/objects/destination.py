@@ -26,11 +26,28 @@ class Destination:
     def header(self):
         return ",".join(vars(self))
 
-    def __repr__(self):
-        output = "Destination: ["
-        items = vars(self)
-        for key in items:
-            output += f"{key}: {items[key]}, "
-        return output.strip() + "]"
-
+    def fieldsRules(self):
+        return [
+            ("id",
+             "Identification Number (ex. KEF)",
+             "[A-Z]{3}"),
+            ("destination",
+             "City / Town (ex. Keflavik)",
+             "[A-Z][a-z]+"),
+            ("country",
+             "Country (ex. Iceland)",
+             "[A-Z][a-z]+"),
+            ("flightTime",
+             "Flighttime in minutes (ex. 530)",
+             "\d+"),
+            ("distance",
+             "Distance in meters (ex. 1000000)",
+             "\d+"),
+            ("contactName",
+             "Contact Name (ex. Paul)",
+             "[a-zA-Z]+"),
+            ("contactNr",
+             "Contact Number (ex. 911)",
+             "\d+")
+        ]
 
