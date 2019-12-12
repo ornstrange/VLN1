@@ -141,7 +141,7 @@ class List(Screen):
         fields = self.fields()
         fieldWidth = (self.width - 2) // len(fields)
         for i, key in enumerate(fields):
-            self.window.move(1, (fieldWidth*i) + 1)
+            self.window.move(1, (fieldWidth*i) + 2)
             self.window.addstr(f"{key:^{fieldWidth}}")
             if i != 0:
                 self.window.move(1, (fieldWidth*i) + 1)

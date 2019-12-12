@@ -1,4 +1,5 @@
 from copy import deepcopy
+import re
 
 class Collection:
     def __init__(self, data, name):
@@ -31,20 +32,23 @@ class Collection:
 
     def filterRegex(self, key, reg, arr):
         # filters a list using a key, bla
-        return None
+        try:
+            return list(filter(lambda x: re.compile(reg).search == key, arr)
+        except:
+            return None
 
     def filter(self, *args):
         # filters all elements using a list of
         # (key, value) tuples
         filtered = deepcopy(self.all)
         try:
-            for key, val in args:
-                if type(key).__name__ == "datetime":
+            for op, key, val in args:
+                if op == "d":
                     begin, end = key, val
                     filtered = self.filterDate(begin, end, filtered)
-                elif type(val).__name__ == "regex":
+                elif op == "?":
                     filtered = self.filterRegex(key, val, filtered)
-                else:
+                elif op == "=":
                     filtered = self.filterKeyVal(key, val, filtered)
                 if not filtered:
                     # No match, dont bother continuing
