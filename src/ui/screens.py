@@ -293,6 +293,7 @@ class List(Screen):
         self.pages = []
         self.inputList = []
         self.maxPage = 0
+        self.fieldValues = {}
         self.fields = None
         self.textBoxes = {}
         self.tabs = {"e": "(e) Entries",
@@ -305,7 +306,7 @@ class List(Screen):
                                           self.height//2 - 10,
                                           self.width//2 - 25)
         self.filterWin = self.window.derwin(32, 50,
-                                          self.height//2 - 15,
+                                          self.height//2 - 16,
                                           self.width//2 - 25)
 
     def draw(self):
@@ -343,9 +344,9 @@ class List(Screen):
             attr = A_NORMAL
             if self.selFilt == i:
                 attr = A_BOLD | A_UNDERLINE
-            currentY = 6 + (i * 4)
-            self.window.move(currentY, 66)
-            self.window.addstr(field, attr)
+            currentY = 1 + (i * 4)
+            self.filterWin.move(currentY, 2)
+            self.filterWin.addstr(field, attr)
         # confirm button
         attr = A_NORMAL
         output = "Confirm"
@@ -353,12 +354,13 @@ class List(Screen):
             curses.curs_set(0)
             attr = A_BOLD | A_REVERSE
             output = "> Confirm <"
-        self.window.addstr(self.y + self.height - 5,
-                           self.width//2 - len(output)//2,
+        height, width = self.filterWin.getmaxyx()
+        self.filterWin.addstr(height - 3,
+                           width//2 - len(output)//2,
                            output, attr)
+        self.filterWin.refresh()
 
     def createTextboxes(self):
-        self.fieldValues = {}
         for name in self.fields:
             self.fieldValues[name] = ""
             self.textBoxes[name] = self.createTextbox()
@@ -366,15 +368,14 @@ class List(Screen):
     def editCurrentTextbox(self):
         curses.curs_set(1)
         curses.ungetch(1)
-        self.fieldValues[self.currentFiltField()] = self.currentTextbox()[0].edit()
+        self.fieldValues[self.currentFiltField()] += self.currentTextbox()[0].edit().strip()
         curses.curs_set(0)
-        return self.fieldValues
 
     def currentTextbox(self):
         return self.textBoxes[self.currentFiltField()]
 
     def createTextbox(self):
-        currentY = 3 + (len(self.textBoxes) * 4)
+        currentY = 2 + (len(self.textBoxes) * 4)
         height, width = self.filterWin.getmaxyx()
         boxWin = self.filterWin.derwin(3, width-4, currentY, 2)
         textWin = self.filterWin.derwin(1, width-6, currentY + 1,3)

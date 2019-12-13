@@ -1,5 +1,9 @@
 from copy import deepcopy
+<<<<<<< HEAD
 from datetime import datetime
+=======
+from datetime import timedelta
+>>>>>>> fb50ad4354eb48503e7cc61d1fcd3f49b3d30581
 from .flight import Flight
 import re
 
@@ -26,29 +30,34 @@ class Collection:
         except (KeyError, ValueError):
             return None
 
-    def filterDate(self, begin, end, arr):
+    def filterDate(self, key, val, arr):
         # filters a list using a begin and end date
         try:
-            return list(filter(lambda x: begin <= x.outFlight.departure <= end, arr))
+            return list(filter(lambda x: val[0] <= str(vars(x)[key].departure) <= val[1], arr))
         except (ValueError, KeyError):
             return None
 
     def filterRegex(self, key, reg, arr):
         # filters a list using a key, bla
         try:
-            return list(filter(lambda x: re.search(reg, vars(x)[key]),arr, re.IGNORECASE))
+            if key == "flightCaptain" or key == "flightAssistant" or key == "headAttendant" or key == "flightAttendants":
+                return list(filter(lambda x: re.search(reg, vars(x)[key][0].name, re.IGNORECASE), arr))
+            elif key == "outFlight" or key == "returnFlight":
+                return list(filter(lambda x: re.search(reg, str(vars(x)[key].departure), re.IGNORECASE), arr))
+            else:
+                return list(filter(lambda x: re.search(reg, vars(x)[key], re.IGNORECASE), arr))
         except (KeyError, ValueError):
             return None
 
     def filter(self, *args):
         # filters all elements using a list of
-        # (key, value) tuples
+        # (op, key, value) tuples
         filtered = deepcopy(self.all)
         try:
             for op, key, val in args:
                 if op == "d":
                     begin, end = key, val
-                    filtered = self.filterDate(begin, end, filtered)
+                    filtered = self.filterDate(key, val, filtered)
                 elif op == "?":
                     reg = val
                     filtered = self.filterRegex(key, reg, filtered)

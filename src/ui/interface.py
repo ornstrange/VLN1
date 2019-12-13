@@ -1,7 +1,8 @@
 from curses import KEY_UP, KEY_DOWN, KEY_EXIT, curs_set
 from curses.ascii import ESC
 
-from .screens import Menu, Input, List, Select, SelEmp
+from objects.collection import Collection
+from .screens import Menu, Input, List, Select
 
 class Interface:
     def __init__(self, collections, screenHeight, screenWidth):
@@ -170,17 +171,38 @@ class Interface:
     def parseKeyFilter(self, keyInt):
         current = self.current
         selected = self.current.selFilt
-        if keyInt == ord("\n"):
-            if selected != len(self.current.fields):
-                self.current.editCurrentTextbox()
-                return
-            else:
-                self.current.tabActive = "e"
-        elif keyInt in [KEY_UP, KEY_DOWN]:
+        if keyInt in [KEY_UP, KEY_DOWN]:
             safeRange = range(len(self.current.fields)+1)
             direction = 1 if keyInt == KEY_DOWN else -1
             if selected + direction in safeRange:
                 self.current.selFilt += direction
+        elif keyInt == ord("\n"):
+            if selected != len(self.current.fields):
+                self.current.editCurrentTextbox()
+                return
+            else:
+                for key, test in current.fieldValues.items():
+                    if test != "":
+                        if " " in test:
+                            test = test.split()
+                            mytuple = ("d", key, test)
+                            result = self.current.collection.filter(mytuple)
+                            if result:
+                                if type(result).__name__ != "Collection":
+                                    name = type(result).__name__.lower() + "s"
+                                    self.current.collection = Collection([result], name)
+                                else:
+                                    self.current.collection = result
+                        else:
+                            mytuple = ("?", key, test)
+                            result = self.current.collection.filter(mytuple)
+                            if result:
+                                if type(result).__name__ != "Collection":
+                                    name = type(result).__name__.lower() + "s"
+                                    self.current.collection = Collection([result], name)
+                                else:
+                                    self.current.collection = result
+                self.current.tabActive = "e"
         elif keyInt == ord("e"): # e pressed
             self.current.tabActive = "e"
 
