@@ -187,6 +187,7 @@ class List(Screen):
         self.selSort = 0
         self.page = 0
         self.pages = []
+        self.inputList = []
         self.maxPage = 0
         self.textBoxes = {}
         self.selected = 7
@@ -220,6 +221,8 @@ class List(Screen):
         self.window.refresh()
     
     def drawFilter(self):
+        if self.textBoxes == {}:
+            self.createTextboxes()
         self.filterWin.clear()
         self.filterWin.box()        
         self.filterWin.addstr(30, 2, "(e) Entries")
@@ -236,43 +239,48 @@ class List(Screen):
         # descriptions
         for i, field in enumerate(self.fields()):
             attr = A_NORMAL
-            if self.selected == i:
+            if self.selFilt == i:
                 attr = A_BOLD | A_UNDERLINE
-            currentY = 5 + (i * 4)
+            currentY = 6 + (i * 4)
             self.window.move(currentY, 66)
             self.window.addstr(field, attr)
 
         # confirm button
         attr = A_NORMAL
         output = "Confirm"
-        if self.selected == len(self.fields()):
+        if self.selFilt == len(self.fields()):
             curses.curs_set(0)
             attr = A_BOLD | A_REVERSE
             output = "> Confirm <"
         self.window.addstr(self.y + self.height - 5,
                            self.width//2 - len(output)//2,
                            output, attr)
-
+                        
+    def createTextboxes(self):
+        self.fieldValues = {}
+        for name in self.fields():
+            self.fieldValues[name] = ""
+            self.textBoxes[name] = self.createTextbox()
     
-    def currentField(self):
-        return self.fields[self.selected]
-
-    def currentTextbox(self):
-        return self.textBoxes[self.currentField()]
-
     def editCurrentTextbox(self):
         curses.curs_set(1)
         curses.ungetch(1)
         self.fieldValues[self.currentField()] = self.currentTextbox()[0].edit()
-        if not self.checkCurrentField():
-            self.fieldValues[self.currentField()] = ""
         curses.curs_set(0)
+        return self.fieldValues
+
+    def currentField(self):
+        return self.fields()[self.selFilt]
+
+    def currentTextbox(self):
+        return self.textBoxes[self.currentField()]
 
     def createTextbox(self):
-        boxWin = self.window.derwin(10, 10, 10, 10)
-        textWin = self.window.derwin(10,20,20,20)
+        currentY = 3 + (len(self.textBoxes) * 4)
+        height, width = self.filterWin.getmaxyx()
+        boxWin = self.filterWin.derwin(3, width-4, currentY, 2)
+        textWin = self.filterWin.derwin(1, width-6, currentY + 1,3)
         return (Textbox(textWin), boxWin, textWin)
-            
 
     def drawSort(self):
         self.sortWin.clear()
@@ -356,4 +364,3 @@ class List(Screen):
     def fields(self):
         # returns a list of fields to use in header
         return list(vars(self.collection[0]).keys())
-
