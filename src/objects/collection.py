@@ -1,9 +1,5 @@
 from copy import deepcopy
-<<<<<<< HEAD
 from datetime import datetime
-=======
-from datetime import timedelta
->>>>>>> fb50ad4354eb48503e7cc61d1fcd3f49b3d30581
 from .flight import Flight
 import re
 

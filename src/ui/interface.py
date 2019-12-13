@@ -2,7 +2,7 @@ from curses import KEY_UP, KEY_DOWN, KEY_EXIT, curs_set
 from curses.ascii import ESC
 
 from objects.collection import Collection
-from .screens import Menu, Input, List, Select
+from .screens import Menu, Input, List, Select, SelEmp
 
 class Interface:
     def __init__(self, collections, screenHeight, screenWidth):
