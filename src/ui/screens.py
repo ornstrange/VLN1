@@ -1,5 +1,5 @@
 import curses
-from curses import A_BOLD, A_REVERSE, A_NORMAL, A_DIM
+from curses import A_BOLD, A_REVERSE, A_NORMAL, A_DIM, A_UNDERLINE
 from curses.textpad import Textbox
 
 MENUWIDTH = 37
@@ -65,6 +65,8 @@ class Input(Screen):
         super().__init__(parent, height, width)
         self.fields = None
         self.rules = None
+        self.desc = None
+        self.fieldValues = None
         self.finished = finished
         self.textBoxes = {}
         self.selected = 7
@@ -76,20 +78,26 @@ class Input(Screen):
 
         # draw textboxes
         for key in self.textBoxes:
-            box, win = self.textBoxes[key]
-            win.box()
-            win.refresh()
+            self.textBoxes[key][1].box()
+            self.textBoxes[key][1].refresh()
+            self.textBoxes[key][2].clear()
+            self.textBoxes[key][2].addstr(self.fieldValues[key])
+            self.textBoxes[key][2].refresh()
+
         # descriptions
-        for i, field in enumerate(self.fields):
-            desc = field[1]
+        for i, field in enumerate(self.desc):
+            attr = A_NORMAL
+            if self.selected == i:
+                attr = A_BOLD | A_UNDERLINE
             currentY = self.y + (i * 4)
             self.window.move(currentY, 3)
-            self.window.addstr(desc)
+            self.window.addstr(self.desc[field], attr)
 
         # confirm button
         attr = A_NORMAL
         output = "Confirm"
         if self.selected == len(self.fields):
+            curses.curs_set(0)
             attr = A_BOLD | A_REVERSE
             output = "> Confirm <"
         self.window.addstr(self.y + self.height - 8,
@@ -117,19 +125,40 @@ class Input(Screen):
         # add new object to collection
         pass
 
+    def currentField(self):
+        return self.fields[self.selected]
+
+    def currentTextbox(self):
+        return self.textBoxes[self.currentField()]
+
+    def editCurrentTextbox(self):
+        curses.curs_set(1)
+        curses.ungetch(1)
+        self.fieldValues[self.currentField()] = self.currentTextbox()[0].edit()
+        curses.curs_set(0)
+
+    def editCallback(self, ch):
+        if ch == "\n":
+            self.fieldValues[self.currentField()] = self.currentTextbox()[0].gather()
+        else:
+            self.currentTextbox()[0].do_command(ch)
+
     def createTextbox(self):
-        currentY = self.y + 3 + (len(self.textBoxes) * 4)
-        _tempWin = curses.newwin(3, self.width - 4, currentY, self.x + 2)
-        _tempWin.box()
-        _tempWin.refresh()
-        return (Textbox(_tempWin), _tempWin)
+        currentY = 3 + (len(self.textBoxes) * 4)
+        boxWin = self.window.derwin(3, self.width - 4, currentY, 2)
+        textWin = self.window.derwin(1, self.width - 6, currentY + 1, 3)
+        return (Textbox(textWin), boxWin, textWin)
 
     def setupFields(self):
         # returns a list of fields to use in header
         self.textBoxes = {}
         firstObject = self.collection[0]
-        self.fields = firstObject.fieldsRules()
-        for name, desc, rule in self.fields:
+        fieldsRules = firstObject.fieldsRules()
+        self.fields = [x[0] for x in fieldsRules]
+        self.desc = {x[0]: x[1] for x in fieldsRules}
+        self.rules = {x[0]: x[2] for x in fieldsRules}
+        self.fieldValues = {x[0]: "" for x in fieldsRules}
+        for name in self.fields:
             self.textBoxes[name] = self.createTextbox()
 
 

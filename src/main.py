@@ -60,7 +60,6 @@ def main(stdscr):
             logo(stdscr, (screenWidth//6)-14, (screenHeight//3)-4) # draw logo
             logo(stdscr, ((screenWidth*5)//6)-14, (screenHeight//3)-4) # draw logo
             art(stdscr, screenHeight, screenWidth)
-
         interface.draw()
         if interface.current == interface["main"]:
             interface.parseKeyMainMenu(all_collections)

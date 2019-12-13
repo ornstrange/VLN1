@@ -1,4 +1,4 @@
-from curses import KEY_UP, KEY_DOWN, KEY_EXIT
+from curses import KEY_UP, KEY_DOWN, KEY_EXIT, curs_set
 from curses.ascii import ESC
 
 from .screens import Menu, Input, List
@@ -22,8 +22,9 @@ class Interface:
         manVoy = Input(empSelVoy, finished=addVoyMenu)
         empSelVoy.onSelect = manVoy
         voySelMan = List(addVoyMenu, screenHeight, screenWidth, manVoy)
-        airSelVoy = List(addVoyMenu, screenHeight, screenWidth, addVoyMenu)
-        addVoy = Input(addVoyMenu, finished=airSelVoy)
+        addVoy = Input(addVoyMenu)
+        airSelVoy = List(addVoy, screenHeight, screenWidth, addVoyMenu)
+        addVoy.finished = airSelVoy
         voySelCopy = List(addVoyMenu, screenHeight, screenWidth, addVoy)
 
         self.screens = {
@@ -53,7 +54,7 @@ class Interface:
         self["sub"].entries = [("Register new *", self["add"]),
                                ("View or edit *s", self["view"]),
                                ("Go back", None)]
-        self["subVoy"].entries = [("Register new voyage", self["addVoy"]),
+        self["subVoy"].entries = [("Register new voyage", self["addVoyMenu"]),
                                ("View or edit voyages", self["view"]),
                                ("Go back", None)]
         self["addVoyMenu"].entries = [("Create new", self["addVoy"]),
@@ -94,10 +95,7 @@ class Interface:
             self.traverseMenu(keyInt)
         elif keyInt == ord("\n"): # enter pressed
             if nextScreen:
-                if self.current.at() == self["add"] and collection.name == "voyages":
-                    self.changeScreen(self["addVoyMenu"])
-                else:
-                    self.changeScreen(nextScreen)
+                self.changeScreen(nextScreen)
             else: # go back
                 self.changeScreen(self.current.parent)
 
@@ -143,9 +141,23 @@ class Interface:
             self.current.at()
 
     def parseKeyInput(self, keyInt):
-        if keyInt == ord("q"):
+        selected = self.current.selected
+        if keyInt == ord("\n"):
+            if selected != len(self.current.fields):
+                self.current.editCurrentTextbox()
+                return
+        if keyInt in [KEY_UP, KEY_DOWN]:
+            safeRange = range(len(self.current.fields) + 1)
+            direction = 1 if keyInt == KEY_DOWN else -1
+            if selected + direction in safeRange:
+                self.current.selected += direction
+        elif keyInt == ord("q"):
             self.changeScreen(self.current.parent)
-
+        elif keyInt == ord("\n"):
+            if selected == len(self.current.fields):
+                self.changeScreen(self.current.finished)
+            else:
+                self.current.editCurrentTextbox()
 
     def changeScreen(self, newScreen):
         # clear current screen
@@ -153,10 +165,10 @@ class Interface:
         # pass collection down to next screen
         newScreen.collection = self.current.collection
         self.current = newScreen
-        if self.current.type in ["menu", "list"]:
-            self.current.selected = 0
+        self.current.selected = 0
         if self.current.type == "list":
             self.current.page = 0
+            self.current.tabActive = "e"
         elif self.current.type == "input":
             self.current.setupFields()
 
