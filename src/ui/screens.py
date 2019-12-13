@@ -1,9 +1,8 @@
 import curses
 from curses import A_BOLD, A_REVERSE, A_NORMAL, A_DIM, A_UNDERLINE
 from curses.textpad import Textbox
-
+from datetime import datetime
 from re import match
-
 from file import File
 
 MENUWIDTH = 37
@@ -75,13 +74,19 @@ class Input(Screen):
         self.fieldValues = {}
         self.finished = finished
         self.textBoxes = {}
-        self.selected = 7
+        self.selected = 0
+        self.entry = None
 
     def draw(self):
         self.window.clear()
         self.window.box()
         self.window.refresh()
+        self.drawTextboxes()
+        self.drawDesc()
+        self.drawConfirm()
+        self.drawQuit()
 
+    def drawTextboxes(self):
         # draw textboxes
         for key in self.textBoxes:
             self.textBoxes[key][1].box()
@@ -90,6 +95,7 @@ class Input(Screen):
             self.textBoxes[key][2].addstr(self.fieldValues[key])
             self.textBoxes[key][2].refresh()
 
+    def drawDesc(self):
         # descriptions
         for i, field in enumerate(self.desc):
             attr = A_NORMAL
@@ -99,6 +105,7 @@ class Input(Screen):
             self.window.move(currentY, 3)
             self.window.addstr(self.desc[field], attr)
 
+    def drawConfirm(self):
         # confirm button
         attr = A_NORMAL
         output = "Confirm"
@@ -110,6 +117,7 @@ class Input(Screen):
                            self.width//2 - len(output)//2,
                            output, attr)
 
+    def drawQuit(self):
         # quit instructions
         self.window.addstr(self.y + self.height - 5,
                            3,
@@ -136,14 +144,18 @@ class Input(Screen):
         self.f.write(self.collection.name, self.collection)
 
     def newVoyage(self):
-        flights = self.f.readFlights
-        employees = self.f.readEmployees
+        all_objects = self.f.read()
+        flights = all_objects["flights"]
+        employees = all_objects["employees"]
         out, ret = self.newFlights()
+        ret.flightNr = ret.flightNr[:-1] + str(int(ret.flightNr[-1]) + 1)
         flights.all.append(out)
         flights.all.append(ret)
-        newVoyage = self.f.newVoyage(self.fieldValues, flights, employees)
-        self.collection.all.append(newVoyage)
         self.f.writeFlights(flights)
+        newVoyage = self.f.newVoyage({"outFlight": out.id, "returnFlight": ret.id},
+                                     flights,
+                                     employees)
+        self.collection.all.append(newVoyage)
         self.f.writeVoyages(self.collection)
 
     def newFlights(self):
@@ -165,7 +177,7 @@ class Input(Screen):
     def editCurrentTextbox(self):
         curses.curs_set(1)
         curses.ungetch(0)
-        self.fieldValues[self.currentField()] = self.currentTextbox()[0].edit()
+        self.fieldValues[self.currentField()] = self.currentTextbox()[0].edit().strip()
         if not self.checkCurrentField():
             self.fieldValues[self.currentField()] = ""
         curses.curs_set(0)
@@ -188,7 +200,6 @@ class Input(Screen):
 
     def createTextbox(self, name):
         currentY = 3 + (len(self.textBoxes) * 4)
-        rule = self.rules[name].split(" ")
         boxWin = self.window.derwin(3, self.width - 4, currentY, 2)
         textWin = self.window.derwin(1, self.width - 6, currentY + 1, 3)
         return (Textbox(textWin), boxWin, textWin)
@@ -201,9 +212,73 @@ class Input(Screen):
         self.fields = [x[0] for x in fieldsRules]
         self.desc = {x[0]: x[1] for x in fieldsRules}
         self.rules = {x[0]: x[2] for x in fieldsRules}
-        self.fieldValues = {x[0]: "" for x in fieldsRules}
         for name in self.fields:
             self.textBoxes[name] = self.createTextbox(name)
+            self.fieldValues[name] = ""
+
+    def setValues(self):
+        for key in self.fieldValues:
+            self.fieldValues[name] = vars(self.entry)[key]
+
+
+class SelEmp(Input):
+    type = "selEmp"
+
+    def __init__(self, parent, height=EDITHEIGHT, width=EDITWIDTH, finished=None):
+        super().__init__(parent, height, width, finished)
+
+    def drawTextboxes(self):
+        # draw textboxes
+        for key in self.textBoxes:
+            self.textBoxes[key][1].box()
+            self.textBoxes[key][1].refresh()
+            self.textBoxes[key][2].clear()
+            if self.fieldValues[key] != "":
+                self.textBoxes[key][2].addstr(self.fieldValues[key].name)
+            self.textBoxes[key][2].refresh()
+
+    def setupFields(self):
+        # returns a list of fields to use in header
+        fieldsRules = [("flightCaptain","Captain"),
+                            ("flightAssistant","Co-Pilot"),
+                            ("headAttendant","Senior Cabin Crew Member"),
+                            ("flightAttendants","Cabin Crew Member")]
+        self.textBoxes = {}
+        self.fields = [x[0] for x in fieldsRules]
+        self.desc = {x[0]: x[1] for x in fieldsRules}
+        for name in self.fields:
+            self.textBoxes[name] = self.createTextbox(name)
+            self.fieldValues[name] = ""
+
+    def checkField(self, field):
+        all_objects = self.f.read()
+        voyages = all_objects["voyages"]
+        curDayStartStr = self.entry.outFlight.departure.strftime("%Y-%m-%d")+" 00:00:00"
+        curDayStart = datetime.strptime(curDayStartStr,"%Y-%m-%d %H:%M:%S")
+        curDayEndStr = self.entry.outFlight.departure.strftime("%Y-%m-%d")+" 23:59:59"
+        curDayEnd = datetime.strptime(curDayEndStr,"%Y-%m-%d %H:%M:%S")
+        voyagesToday = voyages.filter(('d', curDayStart, curDayEnd))
+        if type(voyagesToday).__name__ == "Collection":
+            emp = self.fieldValues[field]
+            voyagesWithSameEmp = voyagesToday.filter(('=',"ssn",emp.ssn))
+            if type(voyagesWithSameEmp).__name__ == "Collection":
+                if len(voyagesWithSameEmp.all) > 1:
+                    return False
+        return True
+
+    def checkAllFields(self):
+        for field in self.fields:
+            if not self.checkField(field):
+                return False
+        return True
+
+    def edit(self):
+        self.entry.flightCaptain = self.fieldValues["flightCaptain"]
+        self.entry.flightAssistant = self.fieldValues["flightAssistant"]
+        self.entry.headAttendant = self.fieldValues["headAttendant"]
+        self.entry.flightAttendants = self.fieldValues["flightAttendants"]
+        self.f.writeVoyages(self.collection)
+
 
 class List(Screen):
     type = "list"
@@ -256,7 +331,6 @@ class List(Screen):
         self.filterWin.box()
         self.filterWin.addstr(30, 2, "(e) Entries")
         self.filterWin.refresh()
-
         # draw textboxes
         for key in self.textBoxes:
             self.textBoxes[key][1].box()
@@ -264,7 +338,6 @@ class List(Screen):
             self.textBoxes[key][2].clear()
             self.textBoxes[key][2].addstr(self.fieldValues[key])
             self.textBoxes[key][2].refresh()
-
         # descriptions
         for i, field in enumerate(self.fields):
             attr = A_NORMAL
@@ -273,8 +346,6 @@ class List(Screen):
             currentY = 6 + (i * 4)
             self.window.move(currentY, 66)
             self.window.addstr(field, attr)
-
-
         # confirm button
         attr = A_NORMAL
         output = "Confirm"
@@ -369,12 +440,17 @@ class List(Screen):
         for i, item in enumerate(items):
             key, val = item
             output = str(val)
+            if not val:
+                output = "Unmanned"
             if type(val).__name__ == "Employee":
                 output = val.name
             elif type(val).__name__ == "Flight":
                 output = str(val.departure)
             elif type(val).__name__ == "list":
-                output = ", ".join([x.name.split()[1] for x in val])
+                if val[0]:
+                    output = ", ".join([x.name.split()[1] for x in val])
+                else:
+                    output = "Unmanned"
 
             self.window.move(baseHeight, (fieldWidth*i) + 1)
             self.window.addstr(f"{output:^{fieldWidth}}", attr)
@@ -382,28 +458,20 @@ class List(Screen):
                 self.window.move(baseHeight, (fieldWidth*i) + 1)
             self.window.addch(curses.ACS_VLINE, attr)
 
-    def setValue(self):
-        self.value = self.collection[self.selected]
-
     def currentSortField(self):
         return list(self.fields.keys())[self.selSort]
 
     def currentFiltField(self):
         return list(self.fields.keys())[self.selFilt]
 
-    def filterOptions(self):
-        # get possible filter options
-        pass
-
-    def select(self):
-        # returns the screen with selected object passed to it
-        pass
-
     def setFields(self):
         # returns a list of fields to use in header
         self.fields = {}
         for name in list(vars(self.collection[0]).keys()):
             self.fields[name] = None
+
+    def getEntry(self):
+        return self.collection[self.selected+(self.page*len(self.pages[0]))]
 
 class Select(List):
     type = "select"
@@ -412,16 +480,10 @@ class Select(List):
         super().__init__(parent, height, width, onSelect)
         self.entry = None
         self.value = []
+        self.currentField = ""
+        self.fieldValues = {}
 
-    def draw(self):
-        super().draw()
+    def addValue(self):
+        if self.getEntry not in self.value:
+            self.value.append(self.getEntry())
 
-    def getEntry(self):
-        return self.collection[self.selected]
-
-    def setValue(self):
-        self.value.append(self.getEntry())
-
-    def getValue(self):
-        self.setValue()
-        return self.value

@@ -1,7 +1,7 @@
 from curses import KEY_UP, KEY_DOWN, KEY_EXIT, curs_set
 from curses.ascii import ESC
 
-from .screens import Menu, Input, List, Select
+from .screens import Menu, Input, List, Select, SelEmp
 
 class Interface:
     def __init__(self, collections, screenHeight, screenWidth):
@@ -14,12 +14,12 @@ class Interface:
         subVoy = Menu(main, 7)
         add = Input(sub, finished=sub)
         addVoyMenu = Menu(sub, 8)
-        view = Menu(sub, 7)
-        _list = List(view, screenHeight, screenWidth, view)
-        find = Input(sub, finished=_list)
-        edit = Input(find, finished=view)
+        #view = Menu(sub, 7)
+        _list = List(sub, screenHeight, screenWidth)
+        #find = Input(sub, finished=_list)
+        edit = Input(_list, finished=sub)
         empSelVoy = Select(addVoyMenu, screenHeight, screenWidth)
-        manVoy = Input(empSelVoy, finished=addVoyMenu)
+        manVoy = SelEmp(empSelVoy, finished=addVoyMenu)
         voySelMan = Select(addVoyMenu, screenHeight, screenWidth, manVoy)
         desSelVoy = Select(addVoyMenu, screenHeight, screenWidth)
         airSelVoy = Select(desSelVoy, screenHeight, screenWidth)
@@ -27,8 +27,9 @@ class Interface:
         voySelCopy = Select(addVoyMenu, screenHeight, screenWidth, addVoy)
 
         # endpoints
-        desSelVoy.finished = airSelVoy
-        airSelVoy.finished = addVoy
+        _list.onSelect = edit
+        desSelVoy.onSelect = airSelVoy
+        airSelVoy.onSelect = addVoy
         empSelVoy.onSelect = manVoy
 
         self.screens = {
@@ -38,8 +39,8 @@ class Interface:
             "add": add,
             "addVoy": addVoy,
             "addVoyMenu": addVoyMenu,
-            "view": view,
-            "find": find,
+            #"view": view,
+            #"find": find,
             "edit": edit,
             "list": _list,
             "manVoy": manVoy,
@@ -57,18 +58,18 @@ class Interface:
                                 ("Airplanes", self["sub"]),
                                 ("Quit", None)]
         self["sub"].entries = [("Register new *", self["add"]),
-                               ("View or edit *s", self["view"]),
+                               ("View or edit *s", self["list"]),
                                ("Go back", None)]
         self["subVoy"].entries = [("Register new voyage", self["addVoyMenu"]),
-                               ("View or edit voyages", self["view"]),
+                               ("View or edit voyages", self["list"]),
                                ("Go back", None)]
         self["addVoyMenu"].entries = [("Create new", self["desSelVoy"]),
                                   ("Copy from previous voyage", self["voySelCopy"]),
                                   ("Populate unmanned voyage", self["voySelMan"]),
                                   ("Go back", None)]
-        self["view"].entries = [("View all *s", self["list"]),
-                                ("Find a specific *", self["find"]),
-                                ("Go back", None)]
+        #self["view"].entries = [("View all *s", self["list"]),
+        #                        ("Find a specific *", self["find"]),
+        #                        ("Go back", None)]
 
         # centering all screens
         for key in self.screens:
@@ -85,7 +86,7 @@ class Interface:
 
     def parseKey(self):
         keyInt = self.current.window.getch()
-
+        # select correct type
         if self.current.type == "menu":
             self.parseKeyMenu(keyInt)
         elif self.current.type == "input":
@@ -94,6 +95,8 @@ class Interface:
             self.parseKeyList(keyInt)
         elif self.current.type == "select":
             self.parseKeySelect(keyInt)
+        elif self.current.type == "selEmp":
+            self.parseKeySelEmp(keyInt)
 
     def parseKeyMenu(self, keyInt):
         nextScreen = self.current.at()
@@ -127,8 +130,8 @@ class Interface:
         elif keyInt == ord("q"):
             self.changeScreen(self.current.parent)
         elif keyInt == ord("\n"): # enter pressed
-            self.current.setValue()
-            self.changeScreen(self.current.finished)
+            #self.current.setValue()
+            self.changeScreen(self.current.onSelect)
 
     def parseKeySelect(self, keyInt):
         current = self.current
@@ -145,8 +148,8 @@ class Interface:
         elif keyInt == ord("q"):
             self.changeScreen(self.current.parent)
         elif keyInt == ord("\n"): # enter pressed
-            self.current.setValue()
-            self.changeScreen(self.current.finished)
+            self.current.addValue()
+            self.changeScreen(self.current.onSelect)
 
     def parseKeySort(self, keyInt):
         current = self.current
@@ -215,8 +218,25 @@ class Interface:
                     if self.current in [self["add"], self["addVoy"]]:
                         self.current.add()
                     self.changeScreen(self.current.finished)
-            else:
-                self.current.editCurrentTextbox()
+
+    def parseKeySelEmp(self, keyInt):
+        selected = self.current.selected
+        if keyInt == ord("\n"):
+            if selected != len(self.current.fields):
+                self.changeScreen(self["empSelVoy"])
+                return
+        if keyInt in [KEY_UP, KEY_DOWN]:
+            safeRange = range(len(self.current.fields) + 1)
+            direction = 1 if keyInt == KEY_DOWN else -1
+            if selected + direction in safeRange:
+                self.current.selected += direction
+        elif keyInt == ord("q"):
+            self.changeScreen(self.current.parent)
+        elif keyInt == ord("\n"):
+            if selected == len(self.current.fields):
+                if self.current.checkAllFields():
+                    self.current.edit()
+                    self.changeScreen(self.current.finished)
 
     def changeScreen(self, newScreen):
         # exit if newScreen is None
@@ -241,10 +261,14 @@ class Interface:
             self.current.tabActive = "e"
             self.current.selSort = 0
             self.current.selFilt = 0
+        if self.current.type == "list":
+            self.current.fields = None
         elif self.current.type == "select":
             self.current.entry = None
         elif self.current.type == "input":
             self.current.setupFields()
+        elif self.current == self["edit"]:
+            newScreen.setValues()
 
     def passCollection(self, newScreen):
         # pass collection down to next screen
@@ -265,15 +289,24 @@ class Interface:
         if newScreen == self["desSelVoy"]:
             newScreen.collection = self.collections["destinations"]
         elif newScreen == self["airSelVoy"]:
-            newScreen.value = self.current.getValue()
+            newScreen.value += self.current.value
             newScreen.collection = self.collections["airplanes"]
         elif newScreen == self["voySelMan"]:
             newScreen.collection = self.collections["voyages"]
         elif newScreen == self["empSelVoy"]:
+            if self.current == self["manVoy"]:
+                newScreen.currentField = self.current.currentField()
             newScreen.collection = self.collections["employees"]
         elif newScreen == self["addVoy"]:
-            self.current.setValue()
-            newScreen.fieldValues["airplane"] = self.current.value[0].id
-            newScreen.fieldValues["destination"] = self.current.value[1].id
+            newScreen.fieldValues["destination"] = self.current.value[0]
+            newScreen.fieldValues["airplane"] = self.current.value[1]
+        elif newScreen == self["manVoy"]:
+            if self.current == self["empSelVoy"]:
+                newScreen.fieldValues[self.current.currentField] = self.current.getEntry()
+            else:
+                newScreen.setupFields()
+                newScreen.entry = self.current.getEntry()
+        elif newScreen == self["edit"]:
+            newScreen.entry = self.current.getEntry()
         return newScreen
 

@@ -1,4 +1,5 @@
 from copy import deepcopy
+from datetime import datetime
 from .flight import Flight
 import re
 
@@ -28,7 +29,7 @@ class Collection:
     def filterDate(self, begin, end, arr):
         # filters a list using a begin and end date
         try:
-            return list(filter(lambda x: begin <= x.outflight.departure <= end, arr))
+            return list(filter(lambda x: begin <= x.outFlight.departure <= end, arr))
         except (ValueError, KeyError):
             return None
 
@@ -65,19 +66,23 @@ class Collection:
 
     def createFlight(self, fields):
         _sum = 0
-        for char in self.id:
+        for char in fields["destination"].id:
             _sum += ord(char)
         destId = f"{_sum % 100:02}"
         curDayStartStr = fields["departure"].split(" ")[0]+" 00:00:00"
-        curDayStart = strptime(curDayStartStr,"%Y-%m-%d %H:%M:%S")
-        curDayEnd = fields["departure"].split(" ")[0]+" 23:59:59"
-        curDayEnd = strptime(curDayEndStr,"%Y-%m-%d %H:%M:%S")
-        curFlightNumber = f"{len(self.filter(('d', curDayStart, curDayEnd))) * 2:02}"
+        curDayStart = datetime.strptime(curDayStartStr,"%Y-%m-%d %H:%M:%S")
+        curDayEndStr = fields["departure"].split(" ")[0]+" 23:59:59"
+        curDayEnd = datetime.strptime(curDayEndStr,"%Y-%m-%d %H:%M:%S")
+        flightsToday = self.filter(('d', curDayStart, curDayEnd))
+        if flightsToday:
+            curFlightNumber = f"{len(flightsToday) * 2:02}"
+        else:
+            curFlightNumber = "00"
         flightNr = "NA" + destId + curFlightNumber
         return Flight(
             fields["airplane"],
             fields["destination"],
-            strptime(fields["departure"], "%Y-%m-%d %H:%M:%S"),
+            datetime.strptime(fields["departure"], "%Y-%m-%d %H:%M:%S"),
             flightNr,
             int(fields["seatSold"])
         )

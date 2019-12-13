@@ -62,7 +62,6 @@ def main(stdscr):
         interface.draw()
         interface.parseKey()
 
-
 if __name__ == "__main__":
     curses.wrapper(main)
 

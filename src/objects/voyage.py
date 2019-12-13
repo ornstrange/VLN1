@@ -13,8 +13,6 @@ class Voyage:
         self.headAttendant = headAttendant
         self.flightAttendants = flightAttendants
 
-    
-
     def status(self):
         # Gives flight status by comparing flight schedule to present time.
         timeNow = datetime.now()

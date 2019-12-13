@@ -135,17 +135,21 @@ class File:
 
     def newVoyage(self, row, flights, employees):
         # new voyage from csv row
-        flightAttendsSsn = row["flightAttendants"].split(";")
-        flightAttends = []
-        for fas in flightAttendsSsn:
-            flightAttends.append(employees.filter(("=", "ssn", fas)))
-        return Voyage(
-            flights.filter(("=", "id", row["outFlight"])),
-            flights.filter(("=", "id", row["returnFlight"])),
-            employees.filter(("=", "ssn", row["flightCaptain"])),
-            employees.filter(("=", "ssn", row["flightAssistant"])),
-            employees.filter(("=", "ssn", row["headAttendant"])),
-            flightAttends)
+        try:
+            flightAttendsSsn = row["flightAttendants"].split(";")
+            flightAttends = []
+            for fas in flightAttendsSsn:
+                flightAttends.append(employees.filter(("=", "ssn", fas)))
+            return Voyage(flights.filter(("=", "id", row["outFlight"])),
+                          flights.filter(("=", "id", row["returnFlight"])),
+                          employees.filter(("=", "ssn", row["flightCaptain"])),
+                          employees.filter(("=", "ssn", row["flightAssistant"])),
+                          employees.filter(("=", "ssn", row["headAttendant"])),
+                          flightAttends)
+        except KeyError:
+            return Voyage(flights.filter(("=", "id", row["outFlight"])),
+                          flights.filter(("=", "id", row["returnFlight"])))
+
 
     def read(self):
         # runs every read function in the correct order
