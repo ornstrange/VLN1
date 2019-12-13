@@ -118,10 +118,27 @@ class Interface:
         if self.current.selected + direction in safeRange:
             self.current.selected += direction
 
+    def parseKeySort(self, keyInt):
+        current = self.current
+        selected = current.selSort
+        if keyInt in [KEY_UP, KEY_DOWN]:
+            safeRange = range(len(current.fields()))
+            direction = 1 if keyInt == KEY_DOWN else -1
+            if selected + direction in safeRange:
+                self.current.selSort += direction
+        elif keyInt == ord("\n"): # enter pressed
+            self.current.collection =self.current.collection.sort(self.current.fields()[self.current.selSort])
+            self.current.tabActive = "e"
+        elif keyInt == ord("e"): # e pressed
+            self.current.tabActive = "e"
+
     def parseKeyList(self, keyInt):
         current = self.current
         selected = current.selected
-        if keyInt in [KEY_UP, KEY_DOWN]:
+        if current.tabActive == "s":
+            self.parseKeySort(keyInt)
+            return
+        elif keyInt in [KEY_UP, KEY_DOWN]:
             safeRange = range(len(current.pages[current.page]))
             direction = 1 if keyInt == KEY_DOWN else -1
             if selected + direction in safeRange:
@@ -133,7 +150,7 @@ class Interface:
             elif current.page != current.maxPage:
                 self.current.page += 1
                 self.current.selected = 0
-        elif keyInt in [ord("e"), ord("f"), ord("s"), ord("v")]:
+        elif keyInt in [ord("e"), ord("s"), ord("f"), ord("v")]:
             self.current.tabActive = chr(keyInt)
         elif keyInt == ord("q"):
             self.changeScreen(self.current.parent)

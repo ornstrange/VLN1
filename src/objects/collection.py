@@ -9,12 +9,13 @@ class Collection:
     def __getitem__(self, index):
         return self.all[index]
 
-    def sort(self, key,arr):
+    def sort(self, key):
         # sorts a list using key
         try:
-            return sorted(arr, key=lambda x: vars(x)[key])
+            self.all = sorted(self.all, key=lambda x: vars(x)[key])
+            return self
         except KeyError:
-            return arr
+            return self
 
     def filterKeyVal(self, key, val, arr):
         # filters a list using key, value

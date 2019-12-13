@@ -169,6 +169,7 @@ class List(Screen):
         super().__init__(parent, height, width)
         self.onSelect = onSelect
         self.selected = 0
+        self.selSort = 0
         self.page = 0
         self.pages = []
         self.maxPage = 0
@@ -178,6 +179,9 @@ class List(Screen):
                      "v": "(v) View Options",
                      "q": "(q) Go back "}
         self.tabActive = "e"
+        self.sortWin = curses.newwin(20, 50, 10, 63)
+
+
 
     def draw(self):
         # draws entries, with filter, sort and view options
@@ -188,6 +192,24 @@ class List(Screen):
         self.drawTabs()
         self.window.box()
         self.window.refresh()
+        if self.tabActive == "s":
+            self.drawSort()
+    
+    def drawSort(self):
+        self.sortWin.clear()
+        self.sortWin.box()
+        self.sortWin.addstr(16, 15, "(e) Entries / cancel")
+        for i,field in enumerate(self.fields()):
+            text = field
+            if i == self.selSort:
+                text = "> " + text + " <"
+            offset = (49 - (len(text))) // 2
+            self.sortWin.move(i + 5, offset)
+            if self.selSort == i:
+                self.sortWin.addstr(text, A_BOLD)
+            else:
+                self.sortWin.addstr(text)
+        self.sortWin.refresh()
 
     def drawHeader(self):
         fields = self.fields()
@@ -246,10 +268,6 @@ class List(Screen):
 
     def filterOptions(self):
         # get possible filter options
-        pass
-
-    def sortOptions(self):
-        # get possible sort options
         pass
 
     def select(self):
