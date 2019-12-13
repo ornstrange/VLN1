@@ -216,8 +216,10 @@ class List(Screen):
         self.selSort = 0
         self.page = 0
         self.pages = []
+        self.inputList = []
         self.maxPage = 0
         self.fields = None
+        self.textBoxes = {}
         self.tabs = {"e": "(e) Entries",
                      "f": "(f) Filter",
                      "s": "(s) Sort",
@@ -227,6 +229,9 @@ class List(Screen):
         self.sortWin = self.window.derwin(20, 50,
                                           self.height//2 - 10,
                                           self.width//2 - 25)
+        self.filterWin = self.window.derwin(32, 50,
+                                          self.height//2 - 15,
+                                          self.width//2 - 25)
 
     def draw(self):
         # draws entries, with filter, sort and view options
@@ -234,12 +239,78 @@ class List(Screen):
         if self.tabActive == "s":
             self.drawSort()
             return
+        if self.tabActive == "f":
+            self.drawFilter()
+            return
         self.window.clear()
         self.drawHeader()
         self.drawEntries()
         self.drawTabs()
         self.window.box()
         self.window.refresh()
+
+    def drawFilter(self):
+        if self.textBoxes == {}:
+            self.createTextboxes()
+        self.filterWin.clear()
+        self.filterWin.box()
+        self.filterWin.addstr(30, 2, "(e) Entries")
+        self.filterWin.refresh()
+
+        # draw textboxes
+        for key in self.textBoxes:
+            self.textBoxes[key][1].box()
+            self.textBoxes[key][1].refresh()
+            self.textBoxes[key][2].clear()
+            self.textBoxes[key][2].addstr(self.fieldValues[key])
+            self.textBoxes[key][2].refresh()
+
+        # descriptions
+        for i, field in enumerate(self.fields()):
+            attr = A_NORMAL
+            if self.selFilt == i:
+                attr = A_BOLD | A_UNDERLINE
+            currentY = 6 + (i * 4)
+            self.window.move(currentY, 66)
+            self.window.addstr(field, attr)
+
+
+        # confirm button
+        attr = A_NORMAL
+        output = "Confirm"
+        if self.selFilt == len(self.fields()):
+            curses.curs_set(0)
+            attr = A_BOLD | A_REVERSE
+            output = "> Confirm <"
+        self.window.addstr(self.y + self.height - 5,
+                           self.width//2 - len(output)//2,
+                           output, attr)
+
+    def createTextboxes(self):
+        self.fieldValues = {}
+        for name in self.fields():
+            self.fieldValues[name] = ""
+            self.textBoxes[name] = self.createTextbox()
+
+    def editCurrentTextbox(self):
+        curses.curs_set(1)
+        curses.ungetch(1)
+        self.fieldValues[self.currentField()] = self.currentTextbox()[0].edit()
+        curses.curs_set(0)
+        return self.fieldValues
+
+    def currentField(self):
+        return self.fields()[self.selFilt]
+
+    def currentTextbox(self):
+        return self.textBoxes[self.currentField()]
+
+    def createTextbox(self):
+        currentY = 3 + (len(self.textBoxes) * 4)
+        height, width = self.filterWin.getmaxyx()
+        boxWin = self.filterWin.derwin(3, width-4, currentY, 2)
+        textWin = self.filterWin.derwin(1, width-6, currentY + 1,3)
+        return (Textbox(textWin), boxWin, textWin)
 
     def drawSort(self):
         self.sortWin.clear()

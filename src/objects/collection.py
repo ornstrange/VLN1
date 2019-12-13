@@ -35,7 +35,7 @@ class Collection:
     def filterRegex(self, key, reg, arr):
         # filters a list using a key, bla
         try:
-            return list(filter(lambda x: re.search(reg, vars(x)[key]),arr))
+            return list(filter(lambda x: re.search(reg, vars(x)[key]),arr, re.IGNORECASE))
         except (KeyError, ValueError):
             return None
 

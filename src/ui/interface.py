@@ -112,10 +112,31 @@ class Interface:
         if self.current.selected + direction in safeRange:
             self.current.selected += direction
 
+    def parseKeyFilter(self, keyInt):
+        current = self.current
+        selected = self.current.selFilt
+        if keyInt == ord("\n"):
+            if selected != len(self.current.fields()):
+                self.current.editCurrentTextbox()
+                return
+            else:
+                self.current.tabActive = "e"
+        elif keyInt in [KEY_UP, KEY_DOWN]:
+            safeRange = range(len(self.current.fields())+1)
+            direction = 1 if keyInt == KEY_DOWN else -1
+            if selected + direction in safeRange:
+                self.current.selFilt += direction
+        elif keyInt == ord("e"): # e pressed
+            self.current.tabActive = "e"
+
+
     def parseKeyList(self, keyInt):
         current = self.current
         if current.tabActive == "s":
             self.parseKeySort(keyInt)
+            return
+        if current.tabActive == "f":
+            self.parseKeyFilter(keyInt)
             return
         elif keyInt in [KEY_UP, KEY_DOWN]:
             self.traverseList(keyInt)
@@ -131,6 +152,9 @@ class Interface:
         current = self.current
         if current.tabActive == "s":
             self.parseKeySort(keyInt)
+            return
+        if current.tabActive == "f":
+            self.parseKeyFilter(keyInt)
             return
         elif keyInt in [KEY_UP, KEY_DOWN]:
             self.traverseList(keyInt)
@@ -217,6 +241,7 @@ class Interface:
             self.current.page = 0
             self.current.tabActive = "e"
             self.current.selSort = 0
+            self.current.selFilt = 0
         elif self.current.type == "select":
             self.current.entry = None
         elif self.current.type == "input":
