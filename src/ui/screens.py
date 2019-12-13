@@ -2,6 +2,10 @@ import curses
 from curses import A_BOLD, A_REVERSE, A_NORMAL, A_DIM, A_UNDERLINE
 from curses.textpad import Textbox
 
+from re import match
+
+from file import File
+
 MENUWIDTH = 37
 EDITWIDTH = 64
 EDITHEIGHT = 37
@@ -109,21 +113,29 @@ class Input(Screen):
                            3,
                            "(q) go back / cancel")
 
-    def check(self):
-        # check if all fields are filled and correct
-        pass
-
-    def checkField(self, field, rule):
-        # check if field is filled and follows rule
-        pass
-
     def change(self, entry):
         # change existing object
         pass
 
     def add(self):
         # add new object to collection
-        pass
+        if self.collection.name == "airplanes":
+            newAirplane = File.newAirplane(File, self.fieldValues)
+            self.collection.all.append(newAirplane)
+            File.write(File, self.collection.name, self.collection)
+        elif self.collection.name == "destinations":
+            newDestination = File.newDestination(File, self.fieldValues)
+            self.collection.all.append(newDestination)
+            File.write(File, self.collection.name, self.collection)
+        elif self.collection.name == "employees":
+            newEmployee = File.newEmployee(File, self.fieldValues)
+            self.collection.all.append(newEmployee)
+            File.write(File, self.collection.name, self.collection)
+        elif self.collection.name == "voyages":
+            self.newVoyage()
+
+    def newVoyage():
+        newVoyage = File.newVoyage(File, self.fieldValues)
 
     def currentField(self):
         return self.fields[self.selected]
@@ -135,13 +147,16 @@ class Input(Screen):
         curses.curs_set(1)
         curses.ungetch(1)
         self.fieldValues[self.currentField()] = self.currentTextbox()[0].edit()
+        if not self.checkCurrentField():
+            self.fieldValues[self.currentField()] = ""
         curses.curs_set(0)
 
-    def editCallback(self, ch):
-        if ch == "\n":
-            self.fieldValues[self.currentField()] = self.currentTextbox()[0].gather()
-        else:
-            self.currentTextbox()[0].do_command(ch)
+    def checkCurrentField(self):
+        # check if field follows rule
+        curField = self.currentField()
+        curFieldText = self.fieldValues[curField]
+        curRule = self.rules[curField]
+        return match(curRule, curFieldText) != None
 
     def createTextbox(self):
         currentY = 3 + (len(self.textBoxes) * 4)
@@ -179,22 +194,23 @@ class List(Screen):
                      "v": "(v) View Options",
                      "q": "(q) Go back "}
         self.tabActive = "e"
-        self.sortWin = curses.newwin(20, 50, 10, 63)
-
-
+        self.sortWin = self.window.derwin(20, 50,
+                                          self.height//2 - 10,
+                                          self.width//2 - 25)
 
     def draw(self):
         # draws entries, with filter, sort and view options
         # and selected entry highlighted
+        if self.tabActive == "s":
+            self.drawSort()
+            return
         self.window.clear()
         self.drawHeader()
         self.drawEntries()
         self.drawTabs()
         self.window.box()
         self.window.refresh()
-        if self.tabActive == "s":
-            self.drawSort()
-    
+
     def drawSort(self):
         self.sortWin.clear()
         self.sortWin.box()

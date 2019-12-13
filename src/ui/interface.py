@@ -172,6 +172,8 @@ class Interface:
             self.changeScreen(self.current.parent)
         elif keyInt == ord("\n"):
             if selected == len(self.current.fields):
+                if self.current == self["add"]:
+                    self.current.add()
                 self.changeScreen(self.current.finished)
             else:
                 self.current.editCurrentTextbox()
@@ -186,6 +188,7 @@ class Interface:
         if self.current.type == "list":
             self.current.page = 0
             self.current.tabActive = "e"
+            self.current.selSort = 0
         elif self.current.type == "input":
             self.current.setupFields()
 

@@ -21,7 +21,7 @@ class Airplane:
         return [
             ("id",
              "Identification Number (TF-***)",
-             "TF-[A-Z]{3}"),
+             "(TF-[A-Z]{3})"),
             ("type",
              "Type of airplane (ex. 737Max)",
              ".+"),

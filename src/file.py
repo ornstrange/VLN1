@@ -54,79 +54,98 @@ class File:
             csv_reader = csv.DictReader(f)
             planes = []
             for row in csv_reader:
-                plane = Airplane(
-                    row["id"],
-                    row["type"],
-                    row["model"],
-                    row["maker"],
-                    row["nrSeats"])
+                plane = self.newAirplane(row)
                 planes.append(plane)
         return Collection(planes, "airplanes")
+
+    def newAirplane(self, row):
+        return Airplane(
+            row["id"],
+            row["type"],
+            row["model"],
+            row["maker"],
+            row["nrSeats"])
 
     def readEmployees(self):
         with open("data/employees.csv") as f:
             csv_reader = csv.DictReader(f)
             employees = []
             for row in csv_reader:
-                employee = Employee(
-                    row["name"],
-                    row["ssn"],
-                    row["address"],
-                    row["mobile"],
-                    row["email"],
-                    row["rank"],
-                    row["license"])
+                employee = self.newEmployee(row)
                 employees.append(employee)
         return Collection(employees, "employees")
+
+    def newEmployee(self, row):
+        # new employee from csv row
+        return Employee(
+            row["name"],
+            row["ssn"],
+            row["address"],
+            row["mobile"],
+            row["email"],
+            row["rank"],
+            row["license"])
 
     def readDestinations(self):
         with open("data/destinations.csv") as f:
             csv_reader = csv.DictReader(f)
             destinations = []
             for row in csv_reader:
-                destination = Destination(
-                    row["id"],
-                    row["destination"],
-                    row["country"],
-                    int(row["flightTime"]),
-                    row["distance"],
-                    row["contactName"],
-                    row["contactNr"])
+                destination = self.newDestination(row)
                 destinations.append(destination)
         return Collection(destinations, "destinations")
+
+    def newDestination(self, row):
+        # new destination from csv row
+        return Destination(
+            row["id"],
+            row["destination"],
+            row["country"],
+            int(row["flightTime"]),
+            row["distance"],
+            row["contactName"],
+            row["contactNr"])
 
     def readFlights(self, airplanes, destinations):
         with open("data/flights.csv") as f:
             csv_reader = csv.DictReader(f)
             flights = []
             for row in csv_reader:
-                flight = Flight(
-                    airplanes.filter(("=", "id", row["airplane"])),
-                    destinations.filter(("=", "id", row["destination"])),
-                    datetime.strptime(row["departure"],"%Y-%m-%dT%H:%M:%S"),
-                    row["flightNr"],
-                    int(row["seatSold"]))
+                flight = self.newFlight(row, airplanes, destinations)
                 flights.append(flight)
             return Collection(flights, "flights")
+
+    def newFlight(self, row, airplanes, destinations):
+        # new flight from csv row
+        return Flight(
+            airplanes.filter(("=", "id", row["airplane"])),
+            destinations.filter(("=", "id", row["destination"])),
+            datetime.strptime(row["departure"],"%Y-%m-%dT%H:%M:%S"),
+            row["flightNr"],
+            int(row["seatSold"]))
 
     def readVoyages(self, flights, employees):
         with open("data/voyages.csv") as f:
             csv_reader = csv.DictReader(f)
             voyages = []
             for row in csv_reader:
-                flightAttendsSsn = row["flightAttendants"].split(";")
-                fligthAttends = []
-                for fas in flightAttendsSsn:
-                    fligthAttends.append(employees.filter(("=", "ssn", fas)))
-                voyage = Voyage(
-                    flights.filter(("=", "id", row["outFlight"])),
-                    flights.filter(("=", "id", row["returnFlight"])),
-                    employees.filter(("=", "ssn", row["flightCaptain"])),
-                    employees.filter(("=", "ssn", row["flightAssistant"])),
-                    employees.filter(("=", "ssn", row["headAttendant"])),
-                    fligthAttends)
+                voyage = self.newVoyage(row, flights, employees)
                 voyages.append(voyage)
         return Collection(voyages, "voyages")
+
+    def newVoyage(self, row, flights, employees):
+        # new voyage from csv row
+        flightAttendsSsn = row["flightAttendants"].split(";")
+        flightAttends = []
+        for fas in flightAttendsSsn:
+            flightAttends.append(employees.filter(("=", "ssn", fas)))
+        return Voyage(
+            flights.filter(("=", "id", row["outFlight"])),
+            flights.filter(("=", "id", row["returnFlight"])),
+            employees.filter(("=", "ssn", row["flightCaptain"])),
+            employees.filter(("=", "ssn", row["flightAssistant"])),
+            employees.filter(("=", "ssn", row["headAttendant"])),
+            flightAttends)
 
     def read(self):
         # runs every read function in the correct order
