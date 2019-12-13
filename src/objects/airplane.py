@@ -8,6 +8,9 @@ class Airplane:
         self.maker = maker
         self.nrSeats = nrSeats
 
+    def __lt__(self, other):
+        return self.id < other.id
+
     def __str__(self):
         # csv representation
         airplaneDict = vars(self)

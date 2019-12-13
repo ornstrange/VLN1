@@ -241,6 +241,7 @@ class List(Screen):
             currentY = 5 + (i * 4)
             self.window.move(currentY, 66)
             self.window.addstr(field, attr)
+            
 
         # confirm button
         attr = A_NORMAL
@@ -269,10 +270,22 @@ class List(Screen):
         curses.curs_set(0)
 
     def createTextbox(self):
+        currentY = 3 + (len(self.textBoxes) * 4)
         boxWin = self.window.derwin(10, 10, 10, 10)
         textWin = self.window.derwin(10,20,20,20)
-        return (Textbox(textWin), boxWin, textWin)
+        return (Textbox(textWin), boxWin, textWin) 
             
+    def setupFields(self):
+        # returns a list of fields to use in header
+        self.textBoxes = {}
+        firstObject = self.collection[0]
+        fieldsRules = firstObject.fieldsRules()
+        self.fields = [x[0] for x in fieldsRules]
+        self.desc = {x[0]: x[1] for x in fieldsRules}
+        self.rules = {x[0]: x[2] for x in fieldsRules}
+        self.fieldValues = {x[0]: "" for x in fieldsRules}
+        for name in self.fields:
+            self.textBoxes[name] = self.createTextbox()
 
     def drawSort(self):
         self.sortWin.clear()
