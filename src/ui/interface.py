@@ -117,6 +117,12 @@ class Interface:
         direction = 1 if keyInt == KEY_DOWN else -1
         if self.current.selected + direction in safeRange:
             self.current.selected += direction
+    
+    def parseKeyFilter(self, keyInt):
+        current = self.current
+        selected = current.selFilt
+        if keyInt == ord("e"): # e pressed
+            self.current.tabActive = "e"
 
     def parseKeySort(self, keyInt):
         current = self.current
@@ -137,6 +143,9 @@ class Interface:
         selected = current.selected
         if current.tabActive == "s":
             self.parseKeySort(keyInt)
+            return
+        if current.tabActive == "f":
+            self.parseKeyFilter(keyInt)
             return
         elif keyInt in [KEY_UP, KEY_DOWN]:
             safeRange = range(len(current.pages[current.page]))
@@ -189,6 +198,7 @@ class Interface:
             self.current.page = 0
             self.current.tabActive = "e"
             self.current.selSort = 0
+            self.current.selFilt = 0
         elif self.current.type == "input":
             self.current.setupFields()
 

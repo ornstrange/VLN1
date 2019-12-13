@@ -197,6 +197,9 @@ class List(Screen):
         self.sortWin = self.window.derwin(20, 50,
                                           self.height//2 - 10,
                                           self.width//2 - 25)
+        self.filterWin = self.window.derwin(20, 50,
+                                          self.height//2 - 10,
+                                          self.width//2 - 25)
 
     def draw(self):
         # draws entries, with filter, sort and view options
@@ -204,12 +207,21 @@ class List(Screen):
         if self.tabActive == "s":
             self.drawSort()
             return
+        if self.tabActive == "f":
+            self.drawFilter()
+            return
         self.window.clear()
         self.drawHeader()
         self.drawEntries()
         self.drawTabs()
         self.window.box()
         self.window.refresh()
+    
+    def drawFilter(self):
+        self.sortWin.clear()
+        self.sortWin.box()        
+        self.sortWin.addstr(16, 15, "(e) Entries / cancel")
+        self.sortWin.refresh()
 
     def drawSort(self):
         self.sortWin.clear()
