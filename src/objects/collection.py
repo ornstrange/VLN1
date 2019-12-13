@@ -37,7 +37,7 @@ class Collection:
         # filters a list using a key, bla
         try:
             if key == "flightCaptain" or key == "flightAssistant" or key == "headAttendant" or key == "flightAttendants":
-                return list(filter(lambda x: re.search(reg, vars(x)[key].name, re.IGNORECASE), arr))
+                return list(filter(lambda x: re.search(reg, vars(x)[key][0].name, re.IGNORECASE), arr))
             elif key == "outFlight" or key == "returnFlight":
                 return list(filter(lambda x: re.search(reg, str(vars(x)[key].departure), re.IGNORECASE), arr))
             else:
