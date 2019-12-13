@@ -112,24 +112,6 @@ class Interface:
         if self.current.selected + direction in safeRange:
             self.current.selected += direction
 
-    def parseKeyFilter(self, keyInt):
-        current = self.current
-        selected = self.current.selFilt
-        if keyInt == ord("\n"):
-            if selected != len(self.current.fields()):
-                self.current.editCurrentTextbox()
-                return
-            else:
-                self.current.tabActive = "e"
-        elif keyInt in [KEY_UP, KEY_DOWN]:
-            safeRange = range(len(self.current.fields())+1)
-            direction = 1 if keyInt == KEY_DOWN else -1
-            if selected + direction in safeRange:
-                self.current.selFilt += direction
-        elif keyInt == ord("e"): # e pressed
-            self.current.tabActive = "e"
-
-
     def parseKeyList(self, keyInt):
         current = self.current
         if current.tabActive == "s":
@@ -175,10 +157,27 @@ class Interface:
             if selected + direction in safeRange:
                 self.current.selSort += direction
         elif keyInt == ord("\n"): # enter pressed
-            curField = self.current.currentField()
+            curField = self.current.currentSortField()
             sortedCollection = current.collection.sort(curField)
             self.current.collection = sortedCollection
             self.current.tabActive = "e"
+        elif keyInt == ord("e"): # e pressed
+            self.current.tabActive = "e"
+
+    def parseKeyFilter(self, keyInt):
+        current = self.current
+        selected = self.current.selFilt
+        if keyInt == ord("\n"):
+            if selected != len(self.current.fields):
+                self.current.editCurrentTextbox()
+                return
+            else:
+                self.current.tabActive = "e"
+        elif keyInt in [KEY_UP, KEY_DOWN]:
+            safeRange = range(len(self.current.fields)+1)
+            direction = 1 if keyInt == KEY_DOWN else -1
+            if selected + direction in safeRange:
+                self.current.selFilt += direction
         elif keyInt == ord("e"): # e pressed
             self.current.tabActive = "e"
 

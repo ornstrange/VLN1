@@ -266,7 +266,7 @@ class List(Screen):
             self.textBoxes[key][2].refresh()
 
         # descriptions
-        for i, field in enumerate(self.fields()):
+        for i, field in enumerate(self.fields):
             attr = A_NORMAL
             if self.selFilt == i:
                 attr = A_BOLD | A_UNDERLINE
@@ -278,7 +278,7 @@ class List(Screen):
         # confirm button
         attr = A_NORMAL
         output = "Confirm"
-        if self.selFilt == len(self.fields()):
+        if self.selFilt == len(self.fields):
             curses.curs_set(0)
             attr = A_BOLD | A_REVERSE
             output = "> Confirm <"
@@ -288,22 +288,19 @@ class List(Screen):
 
     def createTextboxes(self):
         self.fieldValues = {}
-        for name in self.fields():
+        for name in self.fields:
             self.fieldValues[name] = ""
             self.textBoxes[name] = self.createTextbox()
 
     def editCurrentTextbox(self):
         curses.curs_set(1)
         curses.ungetch(1)
-        self.fieldValues[self.currentField()] = self.currentTextbox()[0].edit()
+        self.fieldValues[self.currentFiltField()] = self.currentTextbox()[0].edit()
         curses.curs_set(0)
         return self.fieldValues
 
-    def currentField(self):
-        return self.fields()[self.selFilt]
-
     def currentTextbox(self):
-        return self.textBoxes[self.currentField()]
+        return self.textBoxes[self.currentFiltField()]
 
     def createTextbox(self):
         currentY = 3 + (len(self.textBoxes) * 4)
@@ -388,8 +385,11 @@ class List(Screen):
     def setValue(self):
         self.value = self.collection[self.selected]
 
-    def currentField(self):
-        return list(self.fields.keys())[self.selected]
+    def currentSortField(self):
+        return list(self.fields.keys())[self.selSort]
+
+    def currentFiltField(self):
+        return list(self.fields.keys())[self.selFilt]
 
     def filterOptions(self):
         # get possible filter options
