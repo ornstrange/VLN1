@@ -244,6 +244,7 @@ class List(Screen):
             currentY = 6 + (i * 4)
             self.window.move(currentY, 66)
             self.window.addstr(field, attr)
+            
 
         # confirm button
         attr = A_NORMAL
