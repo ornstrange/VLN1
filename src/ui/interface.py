@@ -120,9 +120,21 @@ class Interface:
     
     def parseKeyFilter(self, keyInt):
         current = self.current
-        selected = current.selFilt
-        if keyInt == ord("e"): # e pressed
+        selected = self.current.selFilt
+        if keyInt == ord("\n"):
+            if selected != len(self.current.fields()):
+                self.current.editCurrentTextbox()
+                return
+            else:
+                self.current.tabActive = "e"
+        elif keyInt in [KEY_UP, KEY_DOWN]:
+            safeRange = range(len(self.current.fields())+1)
+            direction = 1 if keyInt == KEY_DOWN else -1
+            if selected + direction in safeRange:
+                self.current.selFilt += direction
+        elif keyInt == ord("e"): # e pressed
             self.current.tabActive = "e"
+        
 
     def parseKeySort(self, keyInt):
         current = self.current
@@ -133,7 +145,7 @@ class Interface:
             if selected + direction in safeRange:
                 self.current.selSort += direction
         elif keyInt == ord("\n"): # enter pressed
-            self.current.collection =self.current.collection.sort(self.current.fields()[self.current.selSort])
+            self.current.collection = self.current.collection.sort(self.current.fields()[self.current.selSort])
             self.current.tabActive = "e"
         elif keyInt == ord("e"): # e pressed
             self.current.tabActive = "e"

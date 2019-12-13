@@ -9,6 +9,8 @@ class Flight:
         self.flightNr = flightNr
         self.seatSold = seatSold
         self.id = self.createId()
+    
+    
 
     def createId(self):
         flightId = str(self.departure.year)
@@ -20,6 +22,9 @@ class Flight:
         flightId = int(flightId)
         flightId = hex(flightId)[2:]
         return flightId
+    
+    def __lt__(self, other):
+        return self.id < other.id
 
     def __str__(self):
         # csv representation

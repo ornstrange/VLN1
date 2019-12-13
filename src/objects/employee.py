@@ -10,6 +10,9 @@ class Employee:
         self.rank = rank
         self.license = license
 
+    def __lt__(self, other):
+        return self.name < other.name
+
 
     def __str__(self):
         # csv representation
