@@ -18,6 +18,7 @@ class Screen:
         self.window = curses.newwin(self.height, self.width)
         self.window.keypad(True)
         self.collection = None
+        self.saveCollection = None
 
     def center(self, termHeight, termWidth):
         self.y = termHeight // 2 - self.height // 2
@@ -64,13 +65,14 @@ class Menu(Screen):
 
 class Input(Screen):
     type = "input"
+    f = File()
 
     def __init__(self, parent, height=EDITHEIGHT, width=EDITWIDTH, finished=None):
         super().__init__(parent, height, width)
-        self.fields = None
-        self.rules = None
-        self.desc = None
-        self.fieldValues = None
+        self.fields = []
+        self.rules = {}
+        self.desc = {}
+        self.fieldValues = {}
         self.finished = finished
         self.textBoxes = {}
         self.selected = 7
@@ -119,23 +121,40 @@ class Input(Screen):
 
     def add(self):
         # add new object to collection
-        if self.collection.name == "airplanes":
-            newAirplane = File.newAirplane(File, self.fieldValues)
-            self.collection.all.append(newAirplane)
-            File.write(File, self.collection.name, self.collection)
-        elif self.collection.name == "destinations":
-            newDestination = File.newDestination(File, self.fieldValues)
-            self.collection.all.append(newDestination)
-            File.write(File, self.collection.name, self.collection)
-        elif self.collection.name == "employees":
-            newEmployee = File.newEmployee(File, self.fieldValues)
-            self.collection.all.append(newEmployee)
-            File.write(File, self.collection.name, self.collection)
-        elif self.collection.name == "voyages":
+        if self.collection.name == "voyages":
             self.newVoyage()
+            return
+        elif self.collection.name == "airplanes":
+            newAirplane = self.f.newAirplane(self.fieldValues)
+            self.collection.all.append(newAirplane)
+        elif self.collection.name == "destinations":
+            newDestination = self.f.newDestination(self.fieldValues)
+            self.collection.all.append(newDestination)
+        elif self.collection.name == "employees":
+            newEmployee = self.f.newEmployee(self.fieldValues)
+            self.collection.all.append(newEmployee)
+        self.f.write(self.collection.name, self.collection)
 
-    def newVoyage():
-        newVoyage = File.newVoyage(File, self.fieldValues)
+    def newVoyage(self):
+        flights = self.f.readFlights
+        employees = self.f.readEmployees
+        out, ret = self.newFlights()
+        flights.all.append(out)
+        flights.all.append(ret)
+        newVoyage = self.f.newVoyage(self.fieldValues, flights, employees)
+        self.collection.all.append(newVoyage)
+        self.f.writeFlights(flights)
+        self.f.writeVoyages(self.collection)
+
+    def newFlights(self):
+        return (self.collection.createFlight({"airplane": self.fieldValues["airplane"],
+                                             "destination": self.fieldValues["destination"],
+                                             "departure": self.fieldValues["departureOut"],
+                                             "seatSold": self.fieldValues["seatSoldOut"]}),
+            self.collection.createFlight({"airplane": self.fieldValues["airplane"],
+                                          "destination": self.fieldValues["destination"],
+                                          "departure": self.fieldValues["departureRet"],
+                                          "seatSold": self.fieldValues["seatSoldRet"]}))
 
     def currentField(self):
         return self.fields[self.selected]
@@ -145,21 +164,31 @@ class Input(Screen):
 
     def editCurrentTextbox(self):
         curses.curs_set(1)
-        curses.ungetch(1)
+        curses.ungetch(0)
         self.fieldValues[self.currentField()] = self.currentTextbox()[0].edit()
         if not self.checkCurrentField():
             self.fieldValues[self.currentField()] = ""
         curses.curs_set(0)
 
+    def checkField(self, field):
+        fieldText = self.fieldValues[field]
+        rule = self.rules[field]
+        return match(rule, fieldText) != None
+
     def checkCurrentField(self):
         # check if field follows rule
         curField = self.currentField()
-        curFieldText = self.fieldValues[curField]
-        curRule = self.rules[curField]
-        return match(curRule, curFieldText) != None
+        return self.checkField(curField)
 
-    def createTextbox(self):
+    def checkAllFields(self):
+        for field in self.fields:
+            if not self.checkField(field):
+                return False
+        return True
+
+    def createTextbox(self, name):
         currentY = 3 + (len(self.textBoxes) * 4)
+        rule = self.rules[name].split(" ")
         boxWin = self.window.derwin(3, self.width - 4, currentY, 2)
         textWin = self.window.derwin(1, self.width - 6, currentY + 1, 3)
         return (Textbox(textWin), boxWin, textWin)
@@ -174,8 +203,7 @@ class Input(Screen):
         self.rules = {x[0]: x[2] for x in fieldsRules}
         self.fieldValues = {x[0]: "" for x in fieldsRules}
         for name in self.fields:
-            self.textBoxes[name] = self.createTextbox()
-
+            self.textBoxes[name] = self.createTextbox(name)
 
 class List(Screen):
     type = "list"
@@ -183,14 +211,15 @@ class List(Screen):
     def __init__(self, parent, height, width, onSelect = None):
         super().__init__(parent, height, width)
         self.onSelect = onSelect
+        self.value = None
         self.selected = 0
         self.selSort = 0
         self.page = 0
         self.pages = []
         self.inputList = []
         self.maxPage = 0
+        self.fields = None
         self.textBoxes = {}
-        self.selected = 7
         self.tabs = {"e": "(e) Entries",
                      "f": "(f) Filter",
                      "s": "(s) Sort",
@@ -219,12 +248,12 @@ class List(Screen):
         self.drawTabs()
         self.window.box()
         self.window.refresh()
-    
+
     def drawFilter(self):
         if self.textBoxes == {}:
             self.createTextboxes()
         self.filterWin.clear()
-        self.filterWin.box()        
+        self.filterWin.box()
         self.filterWin.addstr(30, 2, "(e) Entries")
         self.filterWin.refresh()
 
@@ -244,7 +273,7 @@ class List(Screen):
             currentY = 6 + (i * 4)
             self.window.move(currentY, 66)
             self.window.addstr(field, attr)
-            
+
 
         # confirm button
         attr = A_NORMAL
@@ -256,13 +285,13 @@ class List(Screen):
         self.window.addstr(self.y + self.height - 5,
                            self.width//2 - len(output)//2,
                            output, attr)
-                        
+
     def createTextboxes(self):
         self.fieldValues = {}
         for name in self.fields():
             self.fieldValues[name] = ""
             self.textBoxes[name] = self.createTextbox()
-    
+
     def editCurrentTextbox(self):
         curses.curs_set(1)
         curses.ungetch(1)
@@ -287,7 +316,7 @@ class List(Screen):
         self.sortWin.clear()
         self.sortWin.box()
         self.sortWin.addstr(16, 15, "(e) Entries / cancel")
-        for i,field in enumerate(self.fields()):
+        for i,field in enumerate(self.fields):
             text = field
             if i == self.selSort:
                 text = "> " + text + " <"
@@ -300,7 +329,9 @@ class List(Screen):
         self.sortWin.refresh()
 
     def drawHeader(self):
-        fields = self.fields()
+        if self.fields == None:
+            self.setFields()
+        fields = self.fields
         fieldWidth = (self.width - 2) // len(fields)
         for i, key in enumerate(fields):
             self.window.move(1, (fieldWidth*i) + 1)
@@ -354,6 +385,12 @@ class List(Screen):
                 self.window.move(baseHeight, (fieldWidth*i) + 1)
             self.window.addch(curses.ACS_VLINE, attr)
 
+    def setValue(self):
+        self.value = self.collection[self.selected]
+
+    def currentField(self):
+        return list(self.fields.keys())[self.selected]
+
     def filterOptions(self):
         # get possible filter options
         pass
@@ -362,6 +399,29 @@ class List(Screen):
         # returns the screen with selected object passed to it
         pass
 
-    def fields(self):
+    def setFields(self):
         # returns a list of fields to use in header
-        return list(vars(self.collection[0]).keys())
+        self.fields = {}
+        for name in list(vars(self.collection[0]).keys()):
+            self.fields[name] = None
+
+class Select(List):
+    type = "select"
+
+    def __init__(self, parent, height, width, onSelect = None):
+        super().__init__(parent, height, width, onSelect)
+        self.entry = None
+        self.value = []
+
+    def draw(self):
+        super().draw()
+
+    def getEntry(self):
+        return self.collection[self.selected]
+
+    def setValue(self):
+        self.value.append(self.getEntry())
+
+    def getValue(self):
+        self.setValue()
+        return self.value

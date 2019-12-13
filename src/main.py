@@ -47,24 +47,20 @@ def main(stdscr):
     all_collections = f.read()
 
     # hide the cursor
-    try:
-        curses.curs_set(0)
-    except:
-        pass
+    curses.curs_set(0)
 
+    # init interface
     screenHeight, screenWidth = stdscr.getmaxyx()
-
-    interface = Interface(screenHeight, screenWidth) # init interface
+    interface = Interface(all_collections, screenHeight, screenWidth)
     while interface.running:
         if interface.current.type == "menu":
-            logo(stdscr, (screenWidth//6)-14, (screenHeight//3)-4) # draw logo
-            logo(stdscr, ((screenWidth*5)//6)-14, (screenHeight//3)-4) # draw logo
+            # draw logo and art
+            logo(stdscr, (screenWidth//6)-14, (screenHeight//3)-4)
+            logo(stdscr, ((screenWidth*5)//6)-14, (screenHeight//3)-4)
             art(stdscr, screenHeight, screenWidth)
+        # draw current window and parse input
         interface.draw()
-        if interface.current == interface["main"]:
-            interface.parseKeyMainMenu(all_collections)
-        else:
-            interface.parseKey()
+        interface.parseKey()
 
 
 if __name__ == "__main__":

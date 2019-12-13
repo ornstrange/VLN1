@@ -1,12 +1,12 @@
 from curses import KEY_UP, KEY_DOWN, KEY_EXIT, curs_set
 from curses.ascii import ESC
 
-from .screens import Menu, Input, List
-#from screens import Menu, Input, List
+from .screens import Menu, Input, List, Select
 
 class Interface:
-    def __init__(self, screenHeight, screenWidth):
+    def __init__(self, collections, screenHeight, screenWidth):
         self.running = True
+        self.collections = collections
 
         # setting up screens with parents, children and size
         main = Menu(None, 9)
@@ -18,14 +18,18 @@ class Interface:
         _list = List(view, screenHeight, screenWidth, view)
         find = Input(sub, finished=_list)
         edit = Input(find, finished=view)
-        empSelVoy = List(addVoyMenu, screenHeight, screenWidth)
+        empSelVoy = Select(addVoyMenu, screenHeight, screenWidth)
         manVoy = Input(empSelVoy, finished=addVoyMenu)
+        voySelMan = Select(addVoyMenu, screenHeight, screenWidth, manVoy)
+        desSelVoy = Select(addVoyMenu, screenHeight, screenWidth)
+        airSelVoy = Select(desSelVoy, screenHeight, screenWidth)
+        addVoy = Input(airSelVoy, finished=addVoyMenu)
+        voySelCopy = Select(addVoyMenu, screenHeight, screenWidth, addVoy)
+
+        # endpoints
+        desSelVoy.finished = airSelVoy
+        airSelVoy.finished = addVoy
         empSelVoy.onSelect = manVoy
-        voySelMan = List(addVoyMenu, screenHeight, screenWidth, manVoy)
-        addVoy = Input(addVoyMenu)
-        airSelVoy = List(addVoy, screenHeight, screenWidth, addVoyMenu)
-        addVoy.finished = airSelVoy
-        voySelCopy = List(addVoyMenu, screenHeight, screenWidth, addVoy)
 
         self.screens = {
             "main": main,
@@ -41,8 +45,9 @@ class Interface:
             "manVoy": manVoy,
             "voySelMan": voySelMan,
             "airSelVoy": airSelVoy,
-            "empSelAdd": empSelVoy,
-            "voySelCopy": voySelCopy
+            "empSelVoy": empSelVoy,
+            "voySelCopy": voySelCopy,
+            "desSelVoy": desSelVoy
         }
 
         # populating menu entries
@@ -57,7 +62,7 @@ class Interface:
         self["subVoy"].entries = [("Register new voyage", self["addVoyMenu"]),
                                ("View or edit voyages", self["view"]),
                                ("Go back", None)]
-        self["addVoyMenu"].entries = [("Create new", self["addVoy"]),
+        self["addVoyMenu"].entries = [("Create new", self["desSelVoy"]),
                                   ("Copy from previous voyage", self["voySelCopy"]),
                                   ("Populate unmanned voyage", self["voySelMan"]),
                                   ("Go back", None)]
@@ -87,6 +92,8 @@ class Interface:
             self.parseKeyInput(keyInt)
         elif self.current.type == "list":
             self.parseKeyList(keyInt)
+        elif self.current.type == "select":
+            self.parseKeySelect(keyInt)
 
     def parseKeyMenu(self, keyInt):
         nextScreen = self.current.at()
@@ -99,25 +106,12 @@ class Interface:
             else: # go back
                 self.changeScreen(self.current.parent)
 
-    def parseKeyMainMenu(self, all_collections):
-        keyInt = self.current.window.getch()
-        if keyInt in [KEY_UP, KEY_DOWN]:
-            self.traverseMenu(keyInt)
-        elif keyInt == ord("\n"): # enter pressed
-            if self.current.at():
-                collectionStr = self.current.entries[self.current.selected][0]
-                collection = all_collections[collectionStr.lower()]
-                self.current.collection = collection
-                self.changeScreen(self.current.at())
-            else: # go back
-                self.running = False
-
     def traverseMenu(self, keyInt):
         safeRange = range(len(self.current.entries))
         direction = 1 if keyInt == KEY_DOWN else -1
         if self.current.selected + direction in safeRange:
             self.current.selected += direction
-    
+
     def parseKeyFilter(self, keyInt):
         current = self.current
         selected = self.current.selFilt
@@ -134,25 +128,10 @@ class Interface:
                 self.current.selFilt += direction
         elif keyInt == ord("e"): # e pressed
             self.current.tabActive = "e"
-        
 
-    def parseKeySort(self, keyInt):
-        current = self.current
-        selected = current.selSort
-        if keyInt in [KEY_UP, KEY_DOWN]:
-            safeRange = range(len(current.fields()))
-            direction = 1 if keyInt == KEY_DOWN else -1
-            if selected + direction in safeRange:
-                self.current.selSort += direction
-        elif keyInt == ord("\n"): # enter pressed
-            self.current.collection = self.current.collection.sort(self.current.fields()[self.current.selSort])
-            self.current.tabActive = "e"
-        elif keyInt == ord("e"): # e pressed
-            self.current.tabActive = "e"
 
     def parseKeyList(self, keyInt):
         current = self.current
-        selected = current.selected
         if current.tabActive == "s":
             self.parseKeySort(keyInt)
             return
@@ -160,23 +139,63 @@ class Interface:
             self.parseKeyFilter(keyInt)
             return
         elif keyInt in [KEY_UP, KEY_DOWN]:
-            safeRange = range(len(current.pages[current.page]))
-            direction = 1 if keyInt == KEY_DOWN else -1
-            if selected + direction in safeRange:
-                self.current.selected += direction
-            elif selected + direction == -1:
-                if current.page != 0:
-                    self.current.page -= 1 if current.page else 0
-                    self.current.selected = len(current.pages[current.page]) - 1
-            elif current.page != current.maxPage:
-                self.current.page += 1
-                self.current.selected = 0
+            self.traverseList(keyInt)
         elif keyInt in [ord("e"), ord("s"), ord("f"), ord("v")]:
             self.current.tabActive = chr(keyInt)
         elif keyInt == ord("q"):
             self.changeScreen(self.current.parent)
         elif keyInt == ord("\n"): # enter pressed
-            self.current.at()
+            self.current.setValue()
+            self.changeScreen(self.current.finished)
+
+    def parseKeySelect(self, keyInt):
+        current = self.current
+        if current.tabActive == "s":
+            self.parseKeySort(keyInt)
+            return
+        if current.tabActive == "f":
+            self.parseKeyFilter(keyInt)
+            return
+        elif keyInt in [KEY_UP, KEY_DOWN]:
+            self.traverseList(keyInt)
+        elif keyInt in [ord("e"), ord("s"), ord("f"), ord("v")]:
+            self.current.tabActive = chr(keyInt)
+        elif keyInt == ord("q"):
+            self.changeScreen(self.current.parent)
+        elif keyInt == ord("\n"): # enter pressed
+            self.current.setValue()
+            self.changeScreen(self.current.finished)
+
+    def parseKeySort(self, keyInt):
+        current = self.current
+        selected = current.selSort
+        if keyInt in [KEY_UP, KEY_DOWN]:
+            safeRange = range(len(current.fields))
+            direction = 1 if keyInt == KEY_DOWN else -1
+            if selected + direction in safeRange:
+                self.current.selSort += direction
+        elif keyInt == ord("\n"): # enter pressed
+            curField = self.current.currentField()
+            sortedCollection = current.collection.sort(curField)
+            self.current.collection = sortedCollection
+            self.current.tabActive = "e"
+        elif keyInt == ord("e"): # e pressed
+            self.current.tabActive = "e"
+
+    def traverseList(self, keyInt):
+        current = self.current
+        selected = current.selected
+        safeRange = range(len(current.pages[current.page]))
+        direction = 1 if keyInt == KEY_DOWN else -1
+        if selected + direction in safeRange:
+            self.current.selected += direction
+        elif selected + direction == -1:
+            if current.page != 0:
+                self.current.page -= 1 if current.page else 0
+                self.current.selected = len(current.pages[current.page]) - 1
+        elif current.page != current.maxPage:
+            self.current.page += 1
+            self.current.selected = 0
 
     def parseKeyInput(self, keyInt):
         selected = self.current.selected
@@ -193,24 +212,69 @@ class Interface:
             self.changeScreen(self.current.parent)
         elif keyInt == ord("\n"):
             if selected == len(self.current.fields):
-                if self.current == self["add"]:
-                    self.current.add()
-                self.changeScreen(self.current.finished)
+                if self.current.checkAllFields():
+                    if self.current in [self["add"], self["addVoy"]]:
+                        self.current.add()
+                    self.changeScreen(self.current.finished)
             else:
                 self.current.editCurrentTextbox()
 
     def changeScreen(self, newScreen):
+        # exit if newScreen is None
+        if not newScreen:
+            exit()
+        # at main menu
+        if self.current == self["main"]:
+            collectionStr = self.current.entries[self.current.selected][0]
+            self.current.collection = self.collections[collectionStr.lower()]
         # clear current screen
         self.current.clear()
         # pass collection down to next screen
-        newScreen.collection = self.current.collection
+        newScreen = self.passCollection(newScreen)
+        # special cases
+        newScreen = self.specialCases(newScreen)
+        # change screen
         self.current = newScreen
+        # init stuff
         self.current.selected = 0
-        if self.current.type == "list":
+        if self.current.type in ["list", "select"]:
             self.current.page = 0
             self.current.tabActive = "e"
             self.current.selSort = 0
             self.current.selFilt = 0
+        elif self.current.type == "select":
+            self.current.entry = None
         elif self.current.type == "input":
             self.current.setupFields()
+
+    def passCollection(self, newScreen):
+        # pass collection down to next screen
+        if self.current.type == "select":
+            if newScreen.type == "select":
+                newScreen.saveCollection = self.current.saveCollection
+            else:
+                newScreen.collection = self.current.saveCollection
+        else:
+            if newScreen.type == "select":
+                newScreen.saveCollection = self.current.collection
+            else:
+                newScreen.collection = self.current.collection
+        return newScreen
+
+    def specialCases(self, newScreen):
+        # set collections
+        if newScreen == self["desSelVoy"]:
+            newScreen.collection = self.collections["destinations"]
+        elif newScreen == self["airSelVoy"]:
+            newScreen.value = self.current.getValue()
+            newScreen.collection = self.collections["airplanes"]
+        elif newScreen == self["voySelMan"]:
+            newScreen.collection = self.collections["voyages"]
+        elif newScreen == self["empSelVoy"]:
+            newScreen.collection = self.collections["employees"]
+        elif newScreen == self["addVoy"]:
+            self.current.setValue()
+            newScreen.fieldValues["airplane"] = self.current.value[0].id
+            newScreen.fieldValues["destination"] = self.current.value[1].id
+        return newScreen
 

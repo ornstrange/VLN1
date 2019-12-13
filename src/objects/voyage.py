@@ -60,9 +60,6 @@ class Voyage:
              "\d{4}(-\d{2}){2}\s\d{2}(:\d{2}){2}"),
             ("seatSoldRet",
              "Number of seats sold return flight (ex. 35)",
-             "\d+"),
-            ("airplane",
-             "Select Airplane",
-             "SEL")
+             "\d+")
         ]
 
