@@ -1,4 +1,5 @@
 from copy import deepcopy
+from .flight import Flight
 import re
 
 class Collection:
@@ -37,6 +38,7 @@ class Collection:
             return list(filter(lambda x: re.search(reg, vars(x)[key]),arr))
         except (KeyError, ValueError):
             return None
+
     def filter(self, *args):
         # filters all elements using a list of
         # (key, value) tuples
@@ -60,4 +62,23 @@ class Collection:
                 return Collection(filtered, self.name)
         except (KeyError, ValueError):
             return None
+
+    def createFlight(self, fields):
+        _sum = 0
+        for char in self.id:
+            _sum += ord(char)
+        destId = f"{_sum % 100:02}"
+        curDayStartStr = fields["departure"].split(" ")[0]+" 00:00:00"
+        curDayStart = strptime(curDayStartStr,"%Y-%m-%d %H:%M:%S")
+        curDayEnd = fields["departure"].split(" ")[0]+" 23:59:59"
+        curDayEnd = strptime(curDayEndStr,"%Y-%m-%d %H:%M:%S")
+        curFlightNumber = f"{len(self.filter(('d', curDayStart, curDayEnd))) * 2:02}"
+        flightNr = "NA" + destId + curFlightNumber
+        return Flight(
+            fields["airplane"],
+            fields["destination"],
+            strptime(fields["departure"], "%Y-%m-%d %H:%M:%S"),
+            flightNr,
+            int(fields["seatSold"])
+        )
 
